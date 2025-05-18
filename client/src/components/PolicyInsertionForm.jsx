@@ -1,28 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function PolicyInsertionForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch
   } = useForm();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+  const sumAssuredOptions = [
+    "200,000", "250,000", "300,000", "350,000", "400,000", "450,000", 
+    "500,000", "600,000", "700,000", "800,000", "900,000", "1,000,000",
+    "1,500,000", "2,000,000", "2,500,000", "3,000,000", "3,500,000",
+    "4,000,000", "4,500,000", "5,000,000"
+  ];
+
   const onSubmit = async (data) => {
-    console.log("Form Submitted:", data);
-
+    setIsSubmitting(true);
     try {
-      const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/submit-policy", data);
-      console.log(response.data);
-      //HANDLE THIS SUCCESS MESSAGE
-      console.log(response?.data?.message);
-    } catch (err) {
-      // HANDLE THIS ERROR IN FRONTEND
-      console.log(err?.response?.data?.error);
-    }
+      // Format the WhatsApp number by removing the +92 if it exists
+      const formattedWhatsapp = data.whatsapp.replace(/^\+92\s?/, '');
+      const payload = {
+        ...data,
+        whatsapp: formattedWhatsapp,
+        sumAssured: parseInt(data.sumAssured.replace(/,/g, '')) // Remove commas and convert to number
+      };
 
+      const response = await axios.post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/submit-policy", 
+        payload
+      );
+      
+      toast.success(response.data.message || "Policy submitted successfully!");
+      // Reset form after successful submission
+      window.location.reload(); // Or implement form reset logic
+    } catch (err) {
+      const errorMessage = err.response?.data?.error || "Failed to submit policy. Please try again.";
+      toast.error(errorMessage);
+      console.error("Submission error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Animation variants
@@ -45,6 +78,20 @@ function PolicyInsertionForm() {
         duration: 0.3,
       },
     },
+  };
+
+  // Handle WhatsApp number input
+  const handleWhatsappChange = (e) => {
+    let value = e.target.value;
+    // Ensure it starts with +92 3 and has max 12 digits
+    if (!value.startsWith("+92 3")) {
+      value = "+92 3";
+    }
+    // Limit to 12 digits after +92
+    if (value.length > 14) {
+      value = value.substring(0, 14);
+    }
+    setValue("whatsapp", value);
   };
 
   return (
@@ -94,6 +141,39 @@ function PolicyInsertionForm() {
             )}
           </motion.div>
 
+          {/* Email */}
+          <motion.div variants={itemVariants}>
+            <label className="block mb-2 font-medium text-gray-700">
+              Email
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                {...register("email", {
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@gmail\.com$/i,
+                    message: "Please enter a valid Gmail address"
+                  }
+                })}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.email ? "border-red-500" : "border-gray-300 focus:border-blue-500"
+                  } transition-all duration-200`}
+                placeholder="example@gmail.com"
+              />
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <span className="text-gray-500">@gmail.com</span>
+              </div>
+            </div>
+            {errors.email && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-red-600 text-sm mt-1"
+              >
+                {errors.email.message}
+              </motion.p>
+            )}
+          </motion.div>
+
           {/* CNIC Number */}
           <motion.div variants={itemVariants}>
             <label className="block mb-2 font-medium text-gray-700">
@@ -134,7 +214,19 @@ function PolicyInsertionForm() {
               type="date"
               {...register("dob", {
                 required: "Date of birth is required",
+                validate: {
+                  notFuture: value => new Date(value) <= new Date() || "Date cannot be in the future",
+                  minAge: value => {
+                    const dob = new Date(value);
+                    const diff = Date.now() - dob.getTime();
+                    const ageDate = new Date(diff);
+                    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                    return age >= 18 || "Must be at least 18 years old";
+                  }
+                }
               })}
+              max={`${new Date().getFullYear() - 18}-12-31`}
+              min="1950-01-01"
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.dob ? "border-red-500" : "border-gray-300 focus:border-blue-500"
                 } transition-all duration-200`}
             />
@@ -160,8 +252,8 @@ function PolicyInsertionForm() {
               {...register("policyNumber", {
                 required: "Policy number is required",
                 pattern: {
-                  value: /^[A-Z0-9]{6,12}$/,
-                  message: "Policy number must be 6-12 characters (A-Z, 0-9)",
+                  value: /^[0-9]{6,12}$/,
+                  message: "Policy number must be 6-12 digits",
                 },
               })}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.policyNumber ? "border-red-500" : "border-gray-300 focus:border-blue-500"
@@ -184,15 +276,20 @@ function PolicyInsertionForm() {
               Sum Assured (Rs)
               <span className="text-red-500">*</span>
             </label>
-            <input
-              type="number"
+            <select
               {...register("sumAssured", {
                 required: "Sum assured is required",
-                min: { value: 10000, message: "Minimum 10,000" },
               })}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.sumAssured ? "border-red-500" : "border-gray-300 focus:border-blue-500"
                 } transition-all duration-200`}
-            />
+            >
+              <option value="">Select Sum Assured</option>
+              {sumAssuredOptions.map((amount) => (
+                <option key={amount} value={amount}>
+                  Rs. {amount}
+                </option>
+              ))}
+            </select>
             {errors.sumAssured && (
               <motion.p
                 initial={{ opacity: 0 }}
@@ -240,7 +337,11 @@ function PolicyInsertionForm() {
               type="date"
               {...register("startDate", {
                 required: "Start date is required",
+                validate: {
+                  notFuture: value => new Date(value) <= new Date() || "Date cannot be in the future"
+                }
               })}
+              max={new Date().toISOString().split('T')[0]}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.startDate ? "border-red-500" : "border-gray-300 focus:border-blue-500"
                 } transition-all duration-200`}
             />
@@ -265,7 +366,16 @@ function PolicyInsertionForm() {
               type="date"
               {...register("lastPaidDate", {
                 required: "Last paid date is required",
+                validate: {
+                  notFuture: value => new Date(value) <= new Date() || "Date cannot be in the future",
+                  afterStartDate: value => {
+                    const startDate = watch("startDate");
+                    if (!startDate) return true;
+                    return new Date(value) >= new Date(startDate) || "Must be after start date";
+                  }
+                }
               })}
+              max={new Date().toISOString().split('T')[0]}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.lastPaidDate ? "border-red-500" : "border-gray-300 focus:border-blue-500"
                 } transition-all duration-200`}
             />
@@ -288,12 +398,13 @@ function PolicyInsertionForm() {
             </label>
             <input
               type="text"
-              placeholder="03XXXXXXXXX"
+              value={watch("whatsapp") || "+92 3"}
+              onChange={handleWhatsappChange}
               {...register("whatsapp", {
                 required: "WhatsApp number is required",
                 pattern: {
-                  value: /^03[0-9]{9}$/,
-                  message: "Format should be 03XXXXXXXXX",
+                  value: /^\+92 3[0-9]{9}$/,
+                  message: "Format should be +92 3XXXXXXXXX",
                 },
               })}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.whatsapp ? "border-red-500" : "border-gray-300 focus:border-blue-500"
@@ -372,9 +483,18 @@ function PolicyInsertionForm() {
               type="submit"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+              disabled={isSubmitting}
+              className={`w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
             >
-              Submit Policy
+              {isSubmitting ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : "Submit Policy"}
             </motion.button>
           </motion.div>
         </motion.form>
@@ -384,3 +504,6 @@ function PolicyInsertionForm() {
 }
 
 export default PolicyInsertionForm;
+
+
+

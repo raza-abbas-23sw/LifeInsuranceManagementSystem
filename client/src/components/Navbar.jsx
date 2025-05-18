@@ -45,6 +45,7 @@ export default function Navbar() {
         { name: "Add Policy", path: "/add" }
       ]
     },
+    {name: "FAQs", path: "/faqs"},
     { name: "Contact", path: "/contact" },
   ];
 

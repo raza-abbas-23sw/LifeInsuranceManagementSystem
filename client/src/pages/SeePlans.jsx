@@ -222,7 +222,6 @@ const SeePlans = () => {
         </motion.div>
       </div>
     </div>
-    <Footer/>
     </>
   );
 };

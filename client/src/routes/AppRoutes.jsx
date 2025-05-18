@@ -5,7 +5,7 @@ import GeneratePlan from "../pages/GeneratePlan";
 import Search from "../pages/Search";
 import Add from "../pages/Add";
 import Contact from "../pages/Contact";
-
+import FAQs from "../pages/FAQs";
 
 export default function AppRoutes() {
   return (
@@ -15,6 +15,7 @@ export default function AppRoutes() {
       <Route path="/see-plans" element={<SeePlans />} />
       <Route path="/search" element={<Search />} />
       <Route path="/add" element={<Add />} />
+      <Route path="/faqs" element={<FAQs />} />
       <Route path="/contact" element={<Contact />} />
 
     </Routes>
