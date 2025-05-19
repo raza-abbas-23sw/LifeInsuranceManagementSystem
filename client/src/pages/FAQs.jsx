@@ -6,9 +6,20 @@ import {
   Typography, 
   TextField, 
   Box,
-  Divider
+  Divider,
+  Paper,
+  InputAdornment,
+  Fade,
+  Grow,
+  Zoom
 } from '@mui/material';
-import { ExpandMore, Search } from '@mui/icons-material';
+import { 
+  ExpandMore, 
+  Search,
+  HelpOutline,
+  ContactSupport
+} from '@mui/icons-material';
+import { motion } from 'framer-motion';
 
 const FAQs = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,8 +29,8 @@ const FAQs = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // FAQ data - flat array of question-answer objects
-const faqData = [
+  // FAQ data
+  const faqData = [
   {
     question: "1: Who Can Buy Life Insurance Policy",
     answer: "Any Pakistani Citizen above 18 years of age, who is eligible to enter into a valid contract, can apply for an insurance policy. Subject to certain conditions, a policy can also be taken on the life of a spouse or minor children."
@@ -244,46 +255,281 @@ const faqData = [
     item.answer.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10
+      }
+    }
+  };
+
   return (
-    <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Frequently Asked Questions
-      </Typography>
-      
-      {/* Search Bar */}
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Search FAQs..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        InputProps={{
-          startAdornment: <Search sx={{ marginRight: 1 }} />
-        }}
-        sx={{ mb: 3 }}
-      />
-      
-      <Divider sx={{ my: 2 }} />
-      
-      {/* FAQ List */}
-      {filteredQuestions.length > 0 ? (
-        filteredQuestions.map((item, index) => (
-          <Accordion 
-            key={index} 
-            expanded={expanded === `panel${index}`} 
-            onChange={handleChange(`panel${index}`)}
+    <Box 
+      sx={{ 
+        maxWidth: 800, 
+        margin: '0 auto', 
+        padding: { xs: 2, sm: 3 },
+        minHeight: '100vh'
+      }}
+    >
+      {/* Header Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            mb: 3,
+            color: '#007ACC'
+          }}
+        >
+          <ContactSupport sx={{ fontSize: 40, mr: 2 }} />
+          <Typography 
+            variant="h3" 
+            component="h1"
+            sx={{ 
+              fontWeight: 700,
+              background: 'linear-gradient(to right, #007ACC, #00B4DB)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
           >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography fontWeight="medium">{item.question}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{item.answer}</Typography>
-            </AccordionDetails>
-          </Accordion>
-        ))
-      ) : (
-        <Typography>No questions found matching your search.</Typography>
+            Help Center
+          </Typography>
+        </Box>
+        
+        <Typography 
+          variant="subtitle1" 
+          sx={{ mb: 3, color: 'text.secondary' }}
+        >
+          Find answers to common questions about our insurance policies and services
+        </Typography>
+      </motion.div>
+
+      {/* Search Bar */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <Paper 
+          elevation={3}
+          sx={{ 
+            mb: 4,
+            borderRadius: 3,
+            overflow: 'hidden',
+            border: '1px solid rgba(0, 122, 204, 0.2)'
+          }}
+        >
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Search questions or keywords..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search sx={{ color: '#007ACC' }} />
+                </InputAdornment>
+              ),
+              sx: {
+                padding: 1.5,
+                '& input': {
+                  padding: '8px 0'
+                }
+              }
+            }}
+            sx={{
+              '& fieldset': { border: 'none' }
+            }}
+          />
+        </Paper>
+      </motion.div>
+
+      {/* Results Count */}
+      {searchTerm && (
+        <Fade in={true}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              mb: 2, 
+              color: 'text.secondary',
+              fontStyle: 'italic'
+            }}
+          >
+            Found {filteredQuestions.length} {filteredQuestions.length === 1 ? 'result' : 'results'}
+          </Typography>
+        </Fade>
       )}
+
+      <Divider sx={{ my: 2, borderColor: 'rgba(0, 122, 204, 0.1)' }} />
+
+      {/* FAQ List */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {filteredQuestions.length > 0 ? (
+          filteredQuestions.map((item, index) => (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              whileHover={{ scale: 1.005 }}
+            >
+              <Accordion 
+                expanded={expanded === `panel${index}`} 
+                onChange={handleChange(`panel${index}`)}
+                sx={{ 
+                  mb: 2,
+                  borderRadius: '12px !important',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 20px rgba(0, 122, 204, 0.08)',
+                  transition: 'all 0.3s ease',
+                  '&:before': {
+                    display: 'none'
+                  },
+                  '&.Mui-expanded': {
+                    margin: '16px 0',
+                    backgroundColor: 'rgba(0, 122, 204, 0.03)'
+                  }
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={
+                    <Zoom in={true}>
+                      <ExpandMore sx={{ color: '#007ACC' }} />
+                    </Zoom>
+                  }
+                  sx={{
+                    minHeight: 68,
+                    '&.Mui-expanded': {
+                      minHeight: 68,
+                      borderBottom: '1px solid rgba(0, 122, 204, 0.1)'
+                    },
+                    '& .MuiAccordionSummary-content': {
+                      alignItems: 'center',
+                      margin: '12px 0'
+                    }
+                  }}
+                >
+                  <HelpOutline 
+                    sx={{ 
+                      color: '#007ACC', 
+                      mr: 2,
+                      fontSize: 24
+                    }} 
+                  />
+                  <Typography 
+                    variant="subtitle1" 
+                    sx={{ 
+                      fontWeight: 600,
+                      color: expanded === `panel${index}` ? '#007ACC' : 'text.primary'
+                    }}
+                  >
+                    {item.question}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{ 
+                    padding: 3,
+                    backgroundColor: 'rgba(0, 122, 204, 0.02)'
+                  }}
+                >
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      lineHeight: 1.7,
+                      color: 'text.secondary',
+                      whiteSpace: 'pre-line'
+                    }}
+                  >
+                    {item.answer}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            </motion.div>
+          ))
+        ) : (
+          <Grow in={true}>
+            <Box 
+              sx={{ 
+                textAlign: 'center', 
+                p: 4,
+                backgroundColor: 'rgba(0, 122, 204, 0.03)',
+                borderRadius: 3
+              }}
+            >
+              <Search sx={{ fontSize: 60, color: 'rgba(0, 122, 204, 0.3)', mb: 2 }} />
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                No results found
+              </Typography>
+              <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                Try different keywords or browse the categories
+              </Typography>
+            </Box>
+          </Grow>
+        )}
+      </motion.div>
+
+      {/* Contact CTA */}
+      <Fade in={true} style={{ transitionDelay: '300ms' }}>
+        <Paper
+          elevation={0}
+          sx={{
+            mt: 4,
+            p: 3,
+            borderRadius: 3,
+            backgroundColor: 'rgba(0, 122, 204, 0.05)',
+            border: '1px solid rgba(0, 122, 204, 0.1)',
+            textAlign: 'center'
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 1, color: '#007ACC' }}>
+            Still have questions?
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2, color: 'text.secondary' }}>
+            Our support team is here to help you
+          </Typography>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            style={{
+              backgroundColor: '#007ACC',
+              color: 'white',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: 30,
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: '1rem',
+              boxShadow: '0 4px 15px rgba(0, 122, 204, 0.3)'
+            }}
+          >
+            Contact Support
+          </motion.button>
+        </Paper>
+      </Fade>
     </Box>
   );
 };

@@ -10,6 +10,8 @@ import {
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+// import { Link } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -63,7 +65,7 @@ const Home = () => {
   return (
     <div className="font-sans bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-start md:items-center bg-white overflow-hidden">
+      <section className="relative min-h-screen flex items-start md:items-center md:pl-20  bg-gradient-to-br from-blue-50 to-gray-100 overflow-hidden">
         {/* Particle background */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {[...Array(60)].map((_, i) => (
@@ -188,6 +190,7 @@ const Home = () => {
                 transition={{ delay: 0.9 }}
                 className="flex flex-wrap gap-4 mb-12"
               >
+                  <Link to={"/generate-plan"}>
                 <motion.button
                   whileHover={{
                     y: -3,
@@ -197,7 +200,9 @@ const Home = () => {
                   className="px-8 py-4 rounded-lg font-bold text-white relative overflow-hidden group"
                   style={{ backgroundColor: "#007ACC" }}
                 >
-                  <span className="relative z-10">Get Protected Now</span>
+                
+                  <span className="relative z-10">Get Your Plan Now</span>
+                 
                   <motion.span
                     animate={{
                       x: ["-100%", "100%"],
@@ -210,7 +215,8 @@ const Home = () => {
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                   />
                 </motion.button>
-
+                 </Link>
+                  <Link to={"/see-plans"}>
                 <motion.button
                   whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.97 }}
@@ -220,7 +226,9 @@ const Home = () => {
                   <span className="relative z-10">Explore Solutions</span>
                   <motion.span className="absolute inset-0 bg-[#007ACC] opacity-0 group-hover:opacity-10 transition-opacity" />
                 </motion.button>
+                </Link>
               </motion.div>
+
 
               {/* Animated stats */}
               <motion.div

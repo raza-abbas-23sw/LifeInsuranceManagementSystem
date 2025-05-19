@@ -4,28 +4,40 @@ import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
 
 const GeneratePlan = () => {
-  // Default test data
-  const defaultFormData = {
-    name: "Raza Abbas",
-    age: "20",
-    plan: "03/20",
-    sumAssured: "4,00,000",
+  // Form state without default values
+  const [formData, setFormData] = useState({
+    name: "",
+    age: "",
+    plan: "",
+    sumAssured: "",
     customSumAssured: "",
-  };
+  });
 
-  const [formData, setFormData] = useState(defaultFormData);
   const [insuranceResults, setInsuranceResults] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Plan types with disabled plans
   const planTypes = [
     { value: "03/10", label: "Standard (10 Years)" },
     { value: "03/15", label: "Standard (15 Years)" },
     { value: "03/20", label: "Standard (20 Years)" },
     { value: "81/20", label: "Golden (20 Years)" },
-    { value: "PLA", label: "Platinium (10 Years)" },
-    { value: "TAKAFUL_ENDOW_20", label: "Takaful Endowment (10 Years)" },
-    { value: "TAKAFUL_ENDOW_15", label: "Takaful Endowment (15 Years)" },
-    { value: "TAKAFUL_GOLDEN", label: "Takaful Golden Endowment" },
+    { value: "PLA", label: "Platinium (10 Years)", disabled: true },
+    {
+      value: "TAKAFUL_ENDOW_20",
+      label: "Takaful Endowment (10 Years)",
+      disabled: true,
+    },
+    {
+      value: "TAKAFUL_ENDOW_15",
+      label: "Takaful Endowment (15 Years)",
+      disabled: true,
+    },
+    {
+      value: "TAKAFUL_GOLDEN",
+      label: "Takaful Golden Endowment",
+      disabled: true,
+    },
   ];
 
   const sumOptions = [
@@ -43,6 +55,15 @@ const GeneratePlan = () => {
     "30,00,000",
     "Other",
   ];
+
+  const overlayStyle = {
+    width: "100%",
+    minHeight: "100vh",
+    padding: "2rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 
   useEffect(() => {
     // Animation on component mount
@@ -77,7 +98,7 @@ const GeneratePlan = () => {
 
     try {
       // Simulate API call delay for animation
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Calculate insurance data
       const results = calculateInsuranceData(
@@ -96,405 +117,765 @@ const GeneratePlan = () => {
   };
 
   // Animation variants
-  const formVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
-
-  const resultVariants = {
+  const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+      },
+    },
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={formVariants}
-        className="bg-white rounded-lg shadow-md p-6 mb-6"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
-          Insurance Plan Calculator
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </motion.div>
-
-            <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-              <label
-                htmlFor="age"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Age
-              </label>
-              <input
-                type="number"
-                id="age"
-                name="age"
-                min="18"
-                max="65"
-                value={formData.age}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </motion.div>
-          </div>
-
-          <motion.div whileHover={{ scale: 1.01 }} className="mb-4">
-            <label
-              htmlFor="plan"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Plan
-            </label>
-            <select
-              id="plan"
-              name="plan"
-              value={formData.plan}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="">Select a plan</option>
-              {planTypes.map((plan, index) => (
-                <option key={index} value={plan.value}>
-                  {plan.label}
-                </option>
-              ))}
-            </select>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.01 }} className="mb-6">
-            <label
-              htmlFor="sumAssured"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Sum Assured (PKR)
-            </label>
-            <select
-              id="sumAssured"
-              name="sumAssured"
-              value={formData.sumAssured}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-              required
-            >
-              <option value="">Select sum assured</option>
-              {sumOptions.map((sum, index) => (
-                <option key={index} value={sum}>
-                  {sum}
-                </option>
-              ))}
-            </select>
-
-            {formData.sumAssured === "Other" && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                transition={{ duration: 0.3 }}
-              >
-                <input
-                  type="text"
-                  name="customSumAssured"
-                  value={formData.customSumAssured}
-                  onChange={(e) => {
-                    const formattedValue = formatCustomSum(e.target.value);
-                    setFormData((prev) => ({
-                      ...prev,
-                      customSumAssured: formattedValue,
-                    }));
-                  }}
-                  placeholder="Enter custom amount"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </motion.div>
-            )}
-          </motion.div>
-
-          <motion.button
-            type="submit"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            disabled={isSubmitting}
-            className={`w-full py-2 px-4 rounded-md text-white transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-              isSubmitting
-                ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
-            }`}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center">
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Calculating...
-              </span>
-            ) : (
-              "GET REPORT"
-            )}
-          </motion.button>
-        </form>
-      </motion.div>
-
-      {insuranceResults && (
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            lineHeight: 1.6,
-            maxWidth: "800px",
-            margin: "0 auto",
-            padding: "20px",
-            border: "1px solid #ccc",
-          }}
+    <div>
+      <div style={overlayStyle}>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="max-w-4xl w-full"
         >
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: "20px",
-              border: "1px solid #000",
-              position: "relative",
-            }}
+          {/* Form Container */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-white rounded-xl shadow-2xl overflow-hidden"
+            whileHover={{ scale: 1.005 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <img
-              src={logo}
-              alt="LIC Logo"
+            <div className="p-6 sm:p-8">
+              <form onSubmit={handleSubmit}>
+                <div className="space-y-6">
+                  {/* Name Field */}
+                  <motion.div variants={itemVariants}>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Full Name
+                    </label>
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <motion.input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                        placeholder="Enter your full name"
+                        required
+                        whileFocus={{ scale: 1.02 }}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Age Field */}
+                  <motion.div variants={itemVariants}>
+                    <label
+                      htmlFor="age"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Age
+                    </label>
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <motion.input
+                        type="number"
+                        id="age"
+                        name="age"
+                        min="18"
+                        max="65"
+                        value={formData.age}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                        placeholder="Enter your age (18-65)"
+                        required
+                        whileFocus={{ scale: 1.02 }}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Plan Field */}
+                  <motion.div variants={itemVariants}>
+                    <label
+                      htmlFor="plan"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Insurance Plan
+                    </label>
+                    <div className="mt-1 relative">
+                      <motion.select
+                        id="plan"
+                        name="plan"
+                        value={formData.plan}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white"
+                        required
+                        whileFocus={{ scale: 1.02 }}
+                      >
+                        <option value="">Select a plan</option>
+                        {planTypes.map((plan, index) => (
+                          <option
+                            key={index}
+                            value={plan.value}
+                            disabled={plan.disabled}
+                            className={plan.disabled ? "text-gray-400" : ""}
+                          >
+                            {plan.label}
+                          </option>
+                        ))}
+                      </motion.select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg
+                          className="h-4 w-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Sum Assured Field */}
+                  <motion.div variants={itemVariants}>
+                    <label
+                      htmlFor="sumAssured"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Sum Assured (PKR)
+                    </label>
+                    <div className="mt-1 relative">
+                      <motion.select
+                        id="sumAssured"
+                        name="sumAssured"
+                        value={formData.sumAssured}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white mb-2"
+                        required
+                        whileFocus={{ scale: 1.02 }}
+                      >
+                        <option value="">Select sum assured</option>
+                        {sumOptions.map((sum, index) => (
+                          <option key={index} value={sum}>
+                            {sum}
+                          </option>
+                        ))}
+                      </motion.select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg
+                          className="h-4 w-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {formData.sumAssured === "Other" && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <input
+                          type="text"
+                          name="customSumAssured"
+                          value={formData.customSumAssured}
+                          onChange={(e) => {
+                            const formattedValue = formatCustomSum(
+                              e.target.value
+                            );
+                            setFormData((prev) => ({
+                              ...prev,
+                              customSumAssured: formattedValue,
+                            }));
+                          }}
+                          placeholder="Enter custom amount"
+                          className="block w-full px-4 py-3 mt-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                          required
+                        />
+                      </motion.div>
+                    )}
+                  </motion.div>
+
+                  {/* Submit Button */}
+                  <motion.div variants={itemVariants}>
+                    <motion.button
+                      type="submit"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      disabled={isSubmitting}
+                      className={`w-full py-4 px-6 rounded-xl text-white text-lg font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                        isSubmitting
+                          ? "bg-blue-400 cursor-not-allowed"
+                          : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+                      }`}
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center justify-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Calculating...
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          GET YOUR PLAN
+                        </span>
+                      )}
+                    </motion.button>
+                  </motion.div>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+
+          {/* Results Display (unchanged from original) */}
+          {insuranceResults && (
+            <div
               style={{
-                width: "70px",
-                height: "auto",
-                position: "absolute",
-                top: "10px",
-                left: "10px",
-              }}
-            />
-            <h1
-              style={{
-                textAlign: "center",
-                fontSize: "24px",
-                marginBottom: "10px",
-                border: "0px solid #000",
+                fontFamily: "Arial, sans-serif",
+                lineHeight: 1.6,
+                maxWidth: "800px",
+                margin: "0 auto",
+                padding: "20px",
+                border: "2px solid #000",
+                backgroundColor: "#fff",
+                marginTop: "40px",
               }}
             >
-              {insuranceResults[2].value}
-            </h1>
-            <p
-              style={{
-                textAlign: "center",
-                margin: "0",
-                border: "0px solid #000",
-              }}
-            >
-              This plan is prepared For
-              <br />
-              <strong>Mumtaz Ali</strong>
-              <br />
-              Sum Assured Rs 2,000,000.00
-            </p>
-          </div>
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "20px",
+                  border: "1px solid #000",
+                  position: "relative",
+                }}
+              >
+                <img
+                  src={logo}
+                  alt="LIC Logo"
+                  style={{
+                    width: "70px",
+                    height: "auto",
+                    position: "absolute",
+                    top: "50%",
+                    left: "10px",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+                <img
+                  src={logo}
+                  alt="LIC Logo"
+                  style={{
+                    width: "70px",
+                    height: "auto",
+                    position: "absolute",
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+                <h1
+                  style={{
+                    textAlign: "center",
+                    fontSize: "24px",
+                    marginBottom: "0px",
+                    border: "0px solid #000",
+                    fontWeight: "bold",
+                  }}
+                >
+                  State Life Insurance Pakistan
+                </h1>
+                <p
+                  style={{
+                    textAlign: "center",
+                    margin: "0",
+                    border: "0px solid #000",
+                  }}
+                >
+                  This plan is prepared For
+                  <br />
+                  <strong>Mr. {insuranceResults[0].value}</strong>
+                  <br />
+                  Sum Assured {insuranceResults[3].value}
+                </p>
+              </div>
 
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              margin: "15px 0",
-              border: "1px solid #000",
-              padding: "10px",
-            }}
-          >
-            <tbody>
-              <tr style={{border: "1px solid #000",textAlign:"center"}}>
-                <td>Age</td>
-                <td style={{ border: "1px solid #000"}}>40 years</td>
-              </tr>
-              <tr style={{border: "1px solid #000",textAlign:"center"}}>
-                <td style={{ border: "1px solid #000" }}>Term</td>
-                <td style={{ border: "1px solid #000" }}>20 years</td>
-              </tr>
-              <tr style={{border: "1px solid #000",textAlign:"center"}}>
-                <td style={{ border: "1px solid #000" }}>Sum Assured</td>
-                <td style={{ border: "1px solid #000" }}>Rs. 2,000,000.00</td>
-              </tr>
-              <tr style={{border: "1px solid #000",textAlign:"center"}}>
-                <td style={{ border: "1px solid #000" }}>Basic Premium</td>
-                <td style={{ border: "1px solid #000" }}>Rs. 100,520.00</td>
-              </tr>
-              <tr style={{border: "1px solid #000",textAlign:"center"}}>
-                <td style={{ border: "1px solid #000" }}>Fib</td>
-                <td style={{ border: "1px solid #000" }}>Rs. 0.00</td>
-              </tr>
-              <tr style={{border: "1px solid #000",textAlign:"center"}}>
-                <td style={{ border: "1px solid #000" }}>Yearly Premium</td>
-                <td style={{ border: "1px solid #000" }}>Rs. 100,520.00</td>
-              </tr>
-            </tbody>
-          </table>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  margin: "15px 0",
+                  border: "1px solid #000",
+                  padding: "10px",
+                }}
+              >
+                <tbody>
+                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                    <td>Age</td>
+                    <td style={{ border: "1px solid #000" }}>
+                      {insuranceResults[1].value}
+                    </td>
+                  </tr>
+                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                    <td style={{ border: "1px solid #000" }}>Plan</td>
+                    <td style={{ border: "1px solid #000" }}>
+                      {insuranceResults[2].value}
+                    </td>
+                  </tr>
+                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                    <td style={{ border: "1px solid #000" }}>Sum Assured</td>
+                    <td style={{ border: "1px solid #000" }}>
+                      Rs. {insuranceResults[3].value}
+                    </td>
+                  </tr>
+                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                    <td style={{ border: "1px solid #000" }}>Annual Premium</td>
+                    <td style={{ border: "1px solid #000" }}>
+                      Rs. {insuranceResults[4].value}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
-          <hr />
+              {/* <hr /> */}
 
-          <h2
-            style={{
-              fontSize: "20px",
-              borderBottom: "1px solid #000",
-              paddingBottom: "5px",
-              marginTop: "20px",
-            }}
-          >
-            Bonus Schedule
-          </h2>
+              <h2
+                style={{
+                  fontSize: "20px",
+                  border: "1px solid #000",
+                  marginTop: "20px",
+                  textAlign: "center",
+                  borderBottom: "0px",
+                  backgroundColor: "#007ACC",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "5px",
+                }}
+              >
+                Bonus Schedule
+              </h2>
 
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              margin: "15px 0",
-            }}
-          >
-            <tbody>
-              <tr>
-                <td>For the first 5 years(per year)</td>
-                <td>82,000.00 X</td>
-                <td>5</td>
-                <td>Rs</td>
-                <td>410,000.00</td>
-              </tr>
-              <tr>
-                <td>From 6th to 16th year (per year)</td>
-                <td>182,000.00 X</td>
-                <td>11</td>
-                <td>Rs</td>
-                <td>2,002,000.00</td>
-              </tr>
-              <tr>
-                <td>From 17th to 20th year(per year)</td>
-                <td>280,000.00 X</td>
-                <td>4</td>
-                <td>Rs</td>
-                <td>1,120,000.00</td>
-              </tr>
-              <tr>
-                <td>Terminal Bonus (At maturity)</td>
-                <td>1,200,000.00 X</td>
-                <td>1</td>
-                <td>Rs</td>
-                <td>1,200,000.00</td>
-              </tr>
-              <tr>
-                <td>Loyalty Terminal Bonus(At maturity)</td>
-                <td>400,000.00 X</td>
-                <td>1</td>
-                <td>Rs</td>
-                <td>400,000.00</td>
-              </tr>
-              <tr>
-                <td>Sum Assured</td>
-                <td></td>
-                <td></td>
-                <td>Rs</td>
-                <td>2,000,000.00</td>
-              </tr>
-            </tbody>
-          </table>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  border: "1px solid #000",
+                  borderTop: "0px",
+                }}
+              >
+                <tbody>
+                  <tr style={{ border: "1px solid #000" }}>
+                    <td style={{ border: "1px solid #000" }}>
+                      For the first 5 years(per year)
+                    </td>
+                    <td
+                      style={{ border: "1px solid #000", textAlign: "center" }}
+                    >
+                      {Math.round(insuranceResults[6].value / 5)} X 5
+                    </td>
+                    <td
+                      style={{ border: "1px solid #000", textAlign: "center" }}
+                    >
+                      Rs {Math.round(insuranceResults[6].value)}
+                    </td>
+                  </tr>
+                  {insuranceResults[2].value !== "Standard (10 Years)" &&
+                    insuranceResults[2].value !== "Standard (15 Years)" && (
+                      <>
+                        <tr style={{ border: "1px solid #000" }}>
+                          <td style={{ border: "1px solid #000" }}>
+                            From 6th to 16th year (per year)
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            {Math.round(insuranceResults[7].value / 11)} X 11
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            Rs {Math.round(insuranceResults[7].value)}
+                          </td>
+                        </tr>
+                        <tr style={{ border: "1px solid #000" }}>
+                          <td style={{ border: "1px solid #000" }}>
+                            From 17th to 20th year(per year)
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            {Math.round(insuranceResults[8].value / 4)} X 4
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            Rs {Math.round(insuranceResults[8].value)}
+                          </td>
+                        </tr>
+                        <tr style={{ border: "1px solid #000" }}>
+                          <td style={{ border: "1px solid #000" }}>
+                            Terminal Bonus (At maturity)
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            {insuranceResults[9].value} X 1
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            Rs {insuranceResults[9].value}
+                          </td>
+                        </tr>
+                        <tr style={{ border: "1px solid #000" }}>
+                          <td style={{ border: "1px solid #000" }}>
+                            Loyalty Terminal Bonus(At maturity)
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            {insuranceResults[10].value} X 1
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #000",
+                              textAlign: "center",
+                            }}
+                          >
+                            Rs {insuranceResults[10].value}
+                          </td>
+                        </tr>
+                      </>
+                    )}
+                  {insuranceResults[2].value === "Standard (10 Years)" && (
+                    <>
+                      <tr style={{ border: "1px solid #000" }}>
+                        <td style={{ border: "1px solid #000" }}>
+                          From 6th to 10th year (per year)
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          {Math.round(insuranceResults[7].value / 5)} X 5
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          Rs {insuranceResults[7].value}
+                        </td>
+                      </tr>
+                      <tr style={{ border: "1px solid #000" }}>
+                        <td style={{ border: "1px solid #000" }}>
+                          Loyalty Terminal Bonus(At maturity)
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          {insuranceResults[8].value} X 1
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          Rs {insuranceResults[8].value}
+                        </td>
+                      </tr>
+                    </>
+                  )}
 
-          <hr />
+                  {insuranceResults[2].value === "Standard (15 Years)" && (
+                    <>
+                      <tr style={{ border: "1px solid #000" }}>
+                        <td style={{ border: "1px solid #000" }}>
+                          From 6th to 15th year (per year)
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          {Math.round(insuranceResults[7].value / 10)} X 10
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          Rs {Math.round(insuranceResults[7].value)}
+                        </td>
+                      </tr>
+                      <tr style={{ border: "1px solid #000" }}>
+                        <td style={{ border: "1px solid #000" }}>
+                          Terminal Bonus (At maturity)
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          {insuranceResults[8].value} X 1
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          Rs {insuranceResults[8].value}
+                        </td>
+                      </tr>
+                      <tr style={{ border: "1px solid #000" }}>
+                        <td style={{ border: "1px solid #000" }}>
+                          Loyalty Terminal Bonus(At maturity)
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          {insuranceResults[9].value} X 1
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          Rs {insuranceResults[9].value}
+                        </td>
+                      </tr>
+                    </>
+                  )}
 
-          <h2
-            style={{
-              fontSize: "20px",
-              borderBottom: "1px solid #000",
-              paddingBottom: "5px",
-              marginTop: "20px",
-            }}
-          >
-            Current Maturity Total
-          </h2>
+                  <tr style={{ border: "1px solid #000" }}>
+                    <td style={{ border: "1px solid #000" }}>Sum Assured</td>
+                    <td style={{ border: "1px solid #000" }}></td>
+                    <td
+                      style={{ border: "1px solid #000", textAlign: "center" }}
+                    >
+                      Rs {insuranceResults[3].value}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
-          <p style={{ textAlign: "center" }}>
-            The Current Bonus Rates have been used in the illustration, Future
-            Bonus depends on future Acturial Valuation
-          </p>
+              <div
+                style={{
+                  fontSize: "20px",
+                  border: "1px solid #000",
+                  marginTop: "20px",
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#007ACC",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "5px",
+                }}
+              >
+                <h1> Current Maturity Total</h1>
+                <h1>Rs {insuranceResults[5].value}</h1>
+              </div>
 
-          <h3 style={{ fontSize: "18px", marginTop: "15px" }}>
-            Expected Maturity Return is Rs. 8,000,000.00
-          </h3>
+              <p
+                style={{
+                  textAlign: "center",
+                  border: "1px solid #000",
+                  marginTop: "10px",
+                }}
+              >
+                The Current Bonus Rates have been used in the illustration,
+                Future Bonus depends on future Acturial Valuation
+              </p>
 
-          <h3 style={{ fontSize: "18px", marginTop: "15px" }}>Coverage</h3>
+              <h1
+                style={{
+                  fontSize: "18px",
+                  marginTop: "10px",
+                  border: "1px solid #000",
+                  textAlign: "center",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  backgroundColor: "#007ACC",
+                  padding: "5px",
+                }}
+              >
+                Expected Maturity Return is Rs. {insuranceResults[3].value * 4}
+              </h1>
 
-          <p>
-            In Case of Accidental Death (God Forbid) From 1st day
-            <br />
-            Rs. 4,000,000.00 + Bonus(es)
-            <br />
-            In Case of Death (God Forbid) From 1st day
-            <br />
-            Rs. 2,000,000.00 + Bonus(es)
-          </p>
+              <h3
+                style={{
+                  fontSize: "18px",
+                  marginTop: "10px",
+                  border: "1px solid #000",
+                  textAlign: "center",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  backgroundColor: "#007ACC",
+                  padding: "5px",
+                }}
+              >
+                Coverage
+              </h3>
 
-          <hr />
+              <p
+                style={{
+                  textAlign: "center",
+                  border: "1px solid #000",
+                  borderTop: "0px",
+                }}
+              >
+                In Case of Accidental Death (God Forbid) From 1st day
+                <br />
+                Rs. {insuranceResults[3].value * 2} + Bonus(es)
+                <br />
+                In Case of Death (God Forbid) From 1st day
+                <br />
+                Rs. {insuranceResults[3].value} + Bonus(es)
+              </p>
 
-          <h3 style={{ fontSize: "18px", marginTop: "15px" }}>
-            Other Benefits
-          </h3>
+              <h3
+                style={{
+                  fontSize: "18px",
+                  marginTop: "10px",
+                  border: "1px solid #000",
+                  textAlign: "center",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  backgroundColor: "#007ACC",
+                  padding: "5px",
+                }}
+              >
+                Other Benefits
+              </h3>
 
-          <p>
-            1) Sum Assured and all bonuses(es) are Guaranteed by Federal
-            Government of Pakistan
-            <br />
-            2) Loan Facility (After 3 Years).
-            <br />
-            3) Automatic Premium Loan Facility.
-          </p>
+              <p
+                style={{
+                  textAlign: "left",
+                  border: "1px solid #000",
+                  marginTop: "0px",
+                  borderTop: "0px",
+                }}
+              >
+                1) Sum Assured and all bonuses(es) are Guaranteed by Federal
+                Government of Pakistan
+                <br />
+                2) Loan Facility (After 3 Years).
+                <br />
+                3) Automatic Premium Loan Facility.
+              </p>
 
-          <div style={{ marginTop: "30px", textAlign: "right" }}>
-            <p>
-              Roshan Ali Lakho
-              <br />
-              Senior Sales Manager
-              <br />
-              Cells 03023646514
-            </p>
-          </div>
-        </div>
-      )}
+              <div
+                style={{
+                  marginTop: "10px",
+                  border: "1px solid #000",
+                  padding: "10px",
+                  textAlign: "center",
+                  backgroundColor: "#007ACC",
+                  color: "#fff",
+                  padding: "5px",
+                }}
+              >
+                <p>
+                  Roshan Ali Lakho || Senior Sales Manager || Cells 03023646514
+                </p>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </div>
     </div>
   );
 };

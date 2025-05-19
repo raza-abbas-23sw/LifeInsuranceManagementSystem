@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <Navbar/>
-      <main className="pt-20 px-4">
+      <main className="pt-20 xl:pt-13">
         <AppRoutes />
       </main>
       <Footer/>

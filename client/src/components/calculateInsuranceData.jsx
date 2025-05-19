@@ -53,7 +53,7 @@ const planTypes = [
   { value: '81/20', label: 'Golden (20 Years)' },
   { value: 'PLA', label: 'Platinium (10 Years)' },
   { value: 'TAKAFUL_ENDOW_20', label: 'Takaful Endowment (10 Years)' },
-  { value: 'TAKAFUL_ENDOW_15', label: 'Takaful Endowment  (10 Years)' },
+  { value: 'TAKAFUL_ENDOW_15', label: 'Takaful Endowment  (15 Years)' },
   { value: 'TAKAFUL_GOLDEN', label: 'Takaful Golden Endowment ' },
 ];
 
@@ -163,14 +163,14 @@ export const calculateInsuranceData = (name, age, planType, sumAssured) => {
     { key: 'name', label: 'Client Name', value: name },
     { key: 'age', label: 'Age', value: `${age} years` },
     { key: 'plan', label: 'Plan Type', value: planTypes.find(p => p.value === planType).label },
-    { key: 'sumAssured', label: 'Sum Assured', value: `PKR ${sumAssured.toLocaleString('en-PK')}` },
+    { key: 'sumAssured', label: 'Sum Assured', value: `${sumAssured}` },
     { key: 'annualPremium', label: 'Annual Premium', value: `PKR ${Math.round(basePremium).toLocaleString('en-PK')}` },
+    { key: 'totalMaturity', label: 'Total Maturity Value', value: `${bonuses.totalMaturity}` },
     ...bonuses.breakdown.map(bonus => ({
       key: `bonus-${bonus.type}-${bonus.period}`,
       label: `${bonus.type} Bonus (${bonus.period})`,
-      value: `PKR ${bonus.bonus.toLocaleString('en-PK')} `
+      value: ` ${bonus.bonus} `
     })),
     { key: 'totalBonus', label: 'Total Bonuses', value: `PKR ${bonuses.totalBonus.toLocaleString('en-PK')}` },
-    { key: 'totalMaturity', label: 'Total Maturity Value', value: `PKR ${bonuses.totalMaturity.toLocaleString('en-PK')}` }
   ];
 };
