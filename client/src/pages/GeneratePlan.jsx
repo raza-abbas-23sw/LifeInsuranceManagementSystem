@@ -409,8 +409,9 @@ const GeneratePlan = () => {
                 <img
                   src={logo}
                   alt="LIC Logo"
+                  className="hidden sm:block"
                   style={{
-                    width: "70px",
+                    width: "60px",
                     height: "auto",
                     position: "absolute",
                     top: "50%",
@@ -421,8 +422,9 @@ const GeneratePlan = () => {
                 <img
                   src={logo}
                   alt="LIC Logo"
+                  className="hidden sm:block"
                   style={{
-                    width: "70px",
+                    width: "60px",
                     height: "auto",
                     position: "absolute",
                     top: "50%",

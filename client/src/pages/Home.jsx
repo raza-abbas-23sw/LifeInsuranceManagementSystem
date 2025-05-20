@@ -61,7 +61,15 @@ const Home = () => {
       desc: "Fast and hassle-free claim processing",
     },
   ];
-
+  const redirectToWhatsApp = () => {
+    const phoneNumber = "923023646514"; // Replace with actual State Life WhatsApp number
+    const message =
+      "Hello, I would like to inquire about State Life insurance plans.";
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappUrl, "_blank");
+  };
   return (
     <div className="font-sans bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
@@ -190,45 +198,43 @@ const Home = () => {
                 transition={{ delay: 0.9 }}
                 className="flex flex-wrap gap-4 mb-12"
               >
-                  <Link to={"/generate-plan"}>
-                <motion.button
-                  whileHover={{
-                    y: -3,
-                    boxShadow: "0 8px 20px #007ACC40",
-                  }}
-                  whileTap={{ scale: 0.97 }}
-                  className="px-8 py-4 rounded-lg font-bold text-white relative overflow-hidden group"
-                  style={{ backgroundColor: "#007ACC" }}
-                >
-                
-                  <span className="relative z-10">Get Your Plan Now</span>
-                 
-                  <motion.span
-                    animate={{
-                      x: ["-100%", "100%"],
+                <Link to={"/generate-plan"}>
+                  <motion.button
+                    whileHover={{
+                      y: -3,
+                      boxShadow: "0 8px 20px #007ACC40",
                     }}
-                    transition={{
-                      duration: 2.5,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                  />
-                </motion.button>
-                 </Link>
-                  <Link to={"/see-plans"}>
-                <motion.button
-                  whileHover={{ y: -3 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="px-8 py-4 rounded-lg font-bold border-2 relative group"
-                  style={{ borderColor: "#007ACC", color: "#007ACC" }}
-                >
-                  <span className="relative z-10">Explore Solutions</span>
-                  <motion.span className="absolute inset-0 bg-[#007ACC] opacity-0 group-hover:opacity-10 transition-opacity" />
-                </motion.button>
+                    whileTap={{ scale: 0.97 }}
+                    className="px-8 py-4 rounded-lg font-bold text-white relative overflow-hidden group"
+                    style={{ backgroundColor: "#007ACC" }}
+                  >
+                    <span className="relative z-10">Get Your Plan Now</span>
+
+                    <motion.span
+                      animate={{
+                        x: ["-100%", "100%"],
+                      }}
+                      transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    />
+                  </motion.button>
+                </Link>
+                <Link to={"/see-plans"}>
+                  <motion.button
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="px-8 py-4 rounded-lg font-bold border-2 relative group"
+                    style={{ borderColor: "#007ACC", color: "#007ACC" }}
+                  >
+                    <span className="relative z-10">Explore Solutions</span>
+                    <motion.span className="absolute inset-0 bg-[#007ACC] opacity-0 group-hover:opacity-10 transition-opacity" />
+                  </motion.button>
                 </Link>
               </motion.div>
-
 
               {/* Animated stats */}
               <motion.div
@@ -633,6 +639,7 @@ const Home = () => {
               whileTap={{ scale: 0.97 }}
               className="px-8 py-4 rounded-lg font-bold text-white relative overflow-hidden"
               style={{ backgroundColor: "#007ACC" }}
+              onClick={() => {navigate("/see-plans")} }
             >
               <span className="relative z-10">Explore All Features</span>
               <motion.span
@@ -892,6 +899,7 @@ const Home = () => {
                   whileTap={{ scale: 0.95 }}
                   className="px-8 py-4 rounded-lg font-bold border-2"
                   style={{ borderColor: "#007ACC", color: "#007ACC" }}
+                  onClick={redirectToWhatsApp}
                 >
                   <span className="relative z-10">Talk to Expert</span>
                 </motion.button>
