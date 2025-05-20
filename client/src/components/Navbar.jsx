@@ -34,14 +34,14 @@ export default function Navbar() {
     { 
       name: "Plans", 
       subItems: [
-        { name: "See Plans", path: "/see-plans" },
-        { name: "Generate Plan", path: "/generate-plan" }
+        { name: "Explore Plans", path: "/see-plans" },
+        { name: "Make Your Plan", path: "/generate-plan" }
       ]
     },
     { 
       name: "Manage", 
       subItems: [
-        { name: "Search", path: "/search" },
+        { name: "Search Policy", path: "/search" },
         { name: "Add Policy", path: "/add" }
       ]
     },
