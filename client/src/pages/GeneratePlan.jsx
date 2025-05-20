@@ -861,7 +861,6 @@ const GeneratePlan = () => {
                 style={{
                   marginTop: "10px",
                   border: "1px solid #000",
-                  padding: "10px",
                   textAlign: "center",
                   backgroundColor: "#007ACC",
                   color: "#fff",
@@ -869,7 +868,7 @@ const GeneratePlan = () => {
                 }}
               >
                 <p>
-                  Roshan Ali Lakho || Senior Sales Manager || Cells 03023646514
+                  Mehdi Raza || Senior Sales Manager || Cells 03023646514
                 </p>
               </div>
             </div>
