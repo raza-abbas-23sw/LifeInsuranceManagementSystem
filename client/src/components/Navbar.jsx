@@ -154,10 +154,10 @@ export default function Navbar() {
             whileTap={{ scale: 0.95 }}
           >
             <Link
-              to="/login"
+              to="/signin"
               className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-semibold text-[#007ACC] transition-all duration-500 rounded-full bg-white hover:bg-gradient-to-r hover:from-white hover:to-blue-100 group"
             >
-              <span className="relative z-10">Login</span>
+              <span className="relative z-10">Sign In</span>
               <motion.span
                 className="absolute inset-0 border-2 border-white rounded-full"
                 initial={{ opacity: 0, scale: 0.9 }}

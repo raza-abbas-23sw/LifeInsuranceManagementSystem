@@ -55,6 +55,7 @@ Thank you for your attention.
 
 Best regards,
 Mehdi Raza`,
+
         };
 
         await transporter.sendMail(mailOptions);

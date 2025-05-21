@@ -6,11 +6,13 @@ import Search from "../pages/Search";
 import Add from "../pages/Add";
 import Contact from "../pages/Contact";
 import FAQs from "../pages/FAQs";
+import SigninPage from "../pages/signinPage";
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/signin" element={<SigninPage />} />
       <Route path="/generate-plan" element={<GeneratePlan />} />
       <Route path="/see-plans" element={<SeePlans />} />
       <Route path="/search" element={<Search />} />
