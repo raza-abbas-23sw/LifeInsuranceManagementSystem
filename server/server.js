@@ -55,51 +55,51 @@ const sendEmailNotification = async (policyHolder) => {
 };
 
 // Cron schedule with proper timezone handling
-// cron.schedule('44 17 * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
 
-//     console.log('Scheduled to run at 12:00 AM, delaying by 1 minute...');
-//     await new Promise(resolve => setTimeout(resolve, 60 * 1000));
+    console.log('Scheduled to run at 12:00 AM, delaying by 1 minute...');
+    await new Promise(resolve => setTimeout(resolve, 60 * 1000));
 
-//     console.log('Running anniversary check');
-//     const today = new Date();
-//     today.setHours(0, 0, 0, 0);
+    console.log('Running anniversary check');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
 
-//     try {
-//         const allPolicies = await Policy.find({});
+    try {
+        const allPolicies = await Policy.find({});
 
-//         emailQueue.clear();
+        emailQueue.clear();
 
-//         for (const policy of allPolicies) {
-//             const startDate = new Date(policy.startDate);
-//             startDate.setHours(0, 0, 0, 0);
+        for (const policy of allPolicies) {
+            const startDate = new Date(policy.startDate);
+            startDate.setHours(0, 0, 0, 0);
 
-//             const monthsSinceStart = differenceInMonths(today, startDate);
-//             console.log(monthsSinceStart)
+            const monthsSinceStart = differenceInMonths(today, startDate);
+            console.log(monthsSinceStart)
 
-//             // Check if it's either 11 months or 11 + n*12 months
-//             if (monthsSinceStart >= 11 && (monthsSinceStart - 11) % 12 === 0) {
-//                 const expectedAnniversary = addMonths(startDate, 11 + ((monthsSinceStart - 11) / 12) * 12);
-//                 console.log("hello")
+            // Check if it's either 11 months or 11 + n*12 months
+            if (monthsSinceStart >= 11 && (monthsSinceStart - 11) % 12 === 0) {
+                const expectedAnniversary = addMonths(startDate, 11 + ((monthsSinceStart - 11) / 12) * 12);
+                console.log("hello")
 
-//                 if (isSameDay(expectedAnniversary, today)) {
-//                     emailQueue.add(async () => {
-//                         try {
-//                             console.log(`Processing policy ${policy._id}`);
-//                             await sendEmailNotification(policy);
-//                         } catch (error) {
-//                             console.error(`Failed to send email for ${policy._id}:`, error);
-//                         }
-//                     });
-//                 }
-//             }
-//         }
-//     } catch (error) {
-//         console.error('Error processing policies:', error);
-//     }
-// }, {
-//     timezone: "Asia/Karachi" // PKT timezone (UTC+5)
-// });
+                if (isSameDay(expectedAnniversary, today)) {
+                    emailQueue.add(async () => {
+                        try {
+                            console.log(`Processing policy ${policy._id}`);
+                            await sendEmailNotification(policy);
+                        } catch (error) {
+                            console.error(`Failed to send email for ${policy._id}:`, error);
+                        }
+                    });
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error processing policies:', error);
+    }
+}, {
+    timezone: "Asia/Karachi" // PKT timezone (UTC+5)
+});
 
 // console.log("Server timezone:", Intl.DateTimeFormat().resolvedOptions().timeZone);
 
