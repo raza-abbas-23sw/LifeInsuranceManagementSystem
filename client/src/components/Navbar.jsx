@@ -50,35 +50,8 @@ export default function Navbar() {
   ];
 
   return (
-    <header className={`w-full fixed z-50 font-sans transition-all duration-500 ${scrolled ? "bg-[#007ACC] shadow-xl py-2" : "bg-[#007ACC]/90 backdrop-blur-sm py-4"}`}>
-      {/* Floating particles for navbar */}
-      <div className="absolute inset-0 overflow-hidden z-0">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{
-              y: [0, -10 + Math.random() * 20],
-              x: [0, -5 + Math.random() * 10],
-              opacity: [0.05, 0.15, 0.05],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 6,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "easeInOut"
-            }}
-            className="absolute rounded-full"
-            style={{
-              width: `${1 + Math.random() * 2}px`,
-              height: `${1 + Math.random() * 2}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              backgroundColor: "white",
-              opacity: 0.05
-            }}
-          />
-        ))}
-      </div>
+    <header className={`w-full fixed z-50 font-sans transition-all duration-500 ${scrolled ? "bg-[#007ACC] shadow-xl py-2" : "bg-[#007ACC] backdrop-blur-sm py-4"}`}>
+      
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center relative z-10">
         {/* Logo */}
@@ -86,14 +59,14 @@ export default function Navbar() {
           <motion.img 
             src={logo} 
             alt="State Life Logo" 
-            className="w-10 h-10"
+            className="w-8 h-8 md:w-10 md:h-10"
             whileHover={{
               rotate: [0, 10, -10, 0],
               transition: { duration: 0.6 }
             }}
           />
           <motion.span 
-            className="text-white text-2xl font-extrabold tracking-wide"
+            className="text-white md:text-2xl font-extrabold tracking-wide"
             initial={{ opacity: 1 }}
             whileHover={{
               background: "linear-gradient(to right, white, #a5d8ff)",

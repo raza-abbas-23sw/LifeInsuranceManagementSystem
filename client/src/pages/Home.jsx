@@ -71,38 +71,11 @@ const Home = () => {
     window.open(whatsappUrl, "_blank");
   };
   return (
-    <div className="font-sans bg-gradient-to-b from-blue-50 to-white">
+    <div className="font-sans ">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-start md:items-center md:pl-20  bg-gradient-to-br from-blue-50 to-gray-100 overflow-hidden">
+      <section className="relative min-h-screen flex items-start md:items-center md:pl-20   overflow-hidden">
         {/* Particle background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {[...Array(60)].map((_, i) => (
-            <motion.div
-              key={i}
-              animate={{
-                y: [0, -100 + Math.random() * 200],
-                x: [0, -50 + Math.random() * 100],
-                opacity: [0.1, 0.6, 0.1],
-                scale: [1, 1.3, 1],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 10,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              }}
-              className="absolute rounded-full"
-              style={{
-                width: `${2 + Math.random() * 4}px`,
-                height: `${2 + Math.random() * 4}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                backgroundColor: "#007ACC",
-                opacity: 0.1,
-              }}
-            />
-          ))}
-        </div>
+      
 
         {/* Floating 3D shapes */}
         <motion.div
@@ -290,7 +263,7 @@ const Home = () => {
                 {/* Main card */}
                 <motion.div
                   whileHover={{ rotateY: 5, rotateX: -5 }}
-                  className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100 relative z-10"
+                  className="bg-white rounded-2xl md:shadow-2xl p-8 border border-gray-100 relative z-10"
                 >
                   <div className="flex justify-between items-start mb-8">
                     <div>
@@ -429,35 +402,7 @@ const Home = () => {
       </section>
       {/* Features Section */}
       <section id="features" className="relative py-24 overflow-hidden">
-        {/* Particle background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {[...Array(40)].map((_, i) => (
-            <motion.div
-              key={i}
-              animate={{
-                y: [0, -50 + Math.random() * 100],
-                x: [0, -25 + Math.random() * 50],
-                opacity: [0.05, 0.2, 0.05],
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 8,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              }}
-              className="absolute rounded-full"
-              style={{
-                width: `${2 + Math.random() * 3}px`,
-                height: `${2 + Math.random() * 3}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                backgroundColor: "#007ACC",
-                opacity: 0.05,
-              }}
-            />
-          ))}
-        </div>
+       
 
         {/* Floating decorative elements */}
         <motion.div
@@ -660,37 +605,9 @@ const Home = () => {
       {/* See Plans Section */}
       <section
         id="plans"
-        className="relative py-24 overflow-hidden bg-gray-50/90"
+        className="relative py-24 overflow-hidden "
       >
-        {/* Particle background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {[...Array(30)].map((_, i) => (
-            <motion.div
-              key={i}
-              animate={{
-                y: [0, -40 + Math.random() * 80],
-                x: [0, -20 + Math.random() * 40],
-                opacity: [0.05, 0.15, 0.05],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 6,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              }}
-              className="absolute rounded-full"
-              style={{
-                width: `${2 + Math.random() * 2}px`,
-                height: `${2 + Math.random() * 2}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                backgroundColor: "#007ACC",
-                opacity: 0.05,
-              }}
-            />
-          ))}
-        </div>
+        
 
         {/* Floating abstract shape */}
         <motion.div
