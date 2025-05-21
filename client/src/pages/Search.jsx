@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast, { Toaster } from "react-hot-toast";
 
 // Helper functions
 const calculateAge = (dobString) => {
@@ -43,9 +42,12 @@ const fetchPolicies = async () => {
   }
 };
 
+
+// SERVER CONNECTIONS
 const deletePolicy = async (policyId) => {
+  console.log("POLICYID", policyId)
   try {
-    await axios.delete(`${import.meta.env.VITE_SERVER_DOMAIN}/delete-policy/${policyId}`);
+    await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/delete-policy", { policyId });
     toast.success("Policy deleted successfully");
     return true;
   } catch (err) {
@@ -55,8 +57,10 @@ const deletePolicy = async (policyId) => {
 };
 
 const updatePolicy = async (policyId, updatedData) => {
+  console.log("policyId: ", policyId)
+  console.log("updatedData: ", updatedData)
   try {
-    await axios.put(`${import.meta.env.VITE_SERVER_DOMAIN}/update-policy/${policyId}`, updatedData);
+    await axios.put(import.meta.env.VITE_SERVER_DOMAIN + "/update-policy", { policyId, ...updatedData });
     toast.success("Policy updated successfully");
     return true;
   } catch (err) {
@@ -66,6 +70,7 @@ const updatePolicy = async (policyId, updatedData) => {
 };
 
 function Search() {
+  let riders_arr = ["AIB", "FIB", "ADB"];
   const [searchTerm, setSearchTerm] = useState("");
   const [policies, setPolicies] = useState([]);
   const [filteredPolicies, setFilteredPolicies] = useState([]);
@@ -76,8 +81,16 @@ function Search() {
     holderName: "",
     sumAssured: 0,
     premium: 0,
-    whatsapp: ""
+    whatsapp: "",
+    email: "",
+    dob: "",
+    nic: "",
+    startDate: "",
+    lastPaidDate: "",
+    policyNumber: "",
+    riders: []
   });
+  const [errors, setErrors] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
   // Fetch and sort data
@@ -135,19 +148,31 @@ function Search() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+
   // Handle edit
   const handleEditClick = (policy) => {
     setEditingPolicy(policy);
+    console.log(policy)
     setEditFormData({
       holderName: policy.holderName,
       sumAssured: policy.sumAssured,
       premium: policy.premium,
-      whatsapp: policy.whatsapp
+      whatsapp: policy.whatsapp,
+      email: policy.email,
+      dob: policy.dob,
+      nic: policy.nic,
+      startDate: policy.startDate,
+      lastPaidDate: policy.lastPaidDate,
+      policyNumber: policy.policyNumber,
+      riders: policy.riders
     });
   };
 
+
   const handleEditFormChange = (e) => {
     const { name, value } = e.target;
+
     setEditFormData(prev => ({
       ...prev,
       [name]: name === "sumAssured" || name === "premium" ? Number(value) : value
@@ -156,9 +181,60 @@ function Search() {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+    // Policy Number validation
+    if (!/^\d{6,12}$/.test(editFormData.policyNumber)) {
+      newErrors.policyNumber = "Policy number must be 6-12 digits";
+    }
+
+    // CNIC validation
+    if (!/^\d{13}$/.test(editFormData.nic)) {
+      newErrors.nic = "CNIC must be 13 digits without dashes";
+    }
+
+    // Premium validation
+    if (editFormData.premium <= 500) {
+      newErrors.premium = "Premium must be more than 500";
+    }
+
+    // WhatsApp validation
+    if (!/^3\d{9}$/.test(editFormData.whatsapp)) {
+      newErrors.whatsapp = "Invalid format. Use 3XXXXXXXXX";
+    }
+
+    // Email validation
+    if (editFormData.email && !/^\S+@\S+\.\S+$/.test(editFormData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    // Date validations
+    const today = new Date();
+    const dob = new Date(editFormData.dob);
+    const startDate = new Date(editFormData.startDate);
+    const lastPaidDate = new Date(editFormData.lastPaidDate);
+
+    if (dob >= today) newErrors.dob = "Date of birth cannot be in the future";
+    if (startDate >= today) newErrors.startDate = "Start date cannot be in the future";
+    if (lastPaidDate >= today) newErrors.lastPaidDate = "Last paid date cannot be in the future";
+
+    if (startDate <= dob) {
+      newErrors.startDate = "Start date must be after date of birth";
+    }
+
+    if (lastPaidDate <= startDate) {
+      newErrors.lastPaidDate = "Last paid date must be after start date";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({})
+
     const success = await updatePolicy(editingPolicy._id, editFormData);
     if (success) {
-      const updatedPolicies = policies.map(policy => 
+      const updatedPolicies = policies.map(policy =>
         policy._id === editingPolicy._id ? { ...policy, ...editFormData } : policy
       );
       setPolicies(updatedPolicies);
@@ -166,8 +242,28 @@ function Search() {
     }
   };
 
+  const handleEditRidersChange = (event) => {
+    const { value, checked } = event.target;
+
+    if (checked) {
+      // Add the rider to the array if checked
+      setEditFormData((prev) => ({
+        ...prev,
+        riders: [...prev.riders, value],
+      }));
+    } else {
+      // Remove the rider from the array if unchecked
+      setEditFormData((prev) => ({
+        ...prev,
+        riders: prev.riders.filter((r) => r !== value),
+      }));
+    }
+  };
+
+
   // Handle delete
   const handleDeleteClick = (policyId) => {
+    console.log(policyId)
     setShowDeleteConfirm(policyId);
   };
 
@@ -212,9 +308,7 @@ function Search() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Toast container */}
-      <div className="toast-container">
-        <toast position="top-right" autoClose={5000} />
-      </div>
+      <Toaster reverseOrder={false}></Toaster>
 
       {/* Header */}
       <motion.div
@@ -419,7 +513,7 @@ function Search() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl p-6 w-full max-w-md"
+            className="bg-white rounded-xl p-6 w-full max-w-md h-[80vh] overflow-y-auto"
           >
             <h3 className="text-xl font-bold mb-4">Edit Policy</h3>
             <form onSubmit={handleEditSubmit}>
@@ -436,6 +530,39 @@ function Search() {
                     className="w-full p-2 border border-gray-300 rounded-md"
                     required
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Policy Number
+                  </label>
+                  <input
+                    type="text"
+                    name="policyNumber"
+                    value={editFormData.policyNumber}
+                    onChange={handleEditFormChange}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                  {errors.policyNumber && (
+                    <p className="text-red-500 text-sm mt-1">{errors.policyNumber}</p>
+                  )}
+                </div>
+                {/* CNIC */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    CNIC
+                  </label>
+                  <input
+                    type="text"
+                    name="nic"
+                    value={editFormData.nic}
+                    onChange={handleEditFormChange}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                  {errors.nic && (
+                    <p className="text-red-500 text-sm mt-1">{errors.nic}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -460,8 +587,27 @@ function Search() {
                     value={editFormData.premium}
                     onChange={handleEditFormChange}
                     className="w-full p-2 border border-gray-300 rounded-md"
+                    min="501"
                     required
                   />
+                  {errors.premium && (
+                    <p className="text-red-500 text-sm mt-1">{errors.premium}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editFormData.email}
+                    onChange={handleEditFormChange}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -473,8 +619,65 @@ function Search() {
                     value={editFormData.whatsapp}
                     onChange={handleEditFormChange}
                     className="w-full p-2 border border-gray-300 rounded-md"
+                    pattern="\3\d{9}"
+                    required
                   />
+                  {errors.whatsapp && (
+                    <p className="text-red-500 text-sm mt-1">{errors.whatsapp}</p>
+                  )}
                 </div>
+
+                {/* Dates */}
+                {['dob', 'startDate', 'lastPaidDate'].map((dateField) => (
+                  <div key={dateField}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {dateField.charAt(0).toUpperCase() + dateField.slice(1)}
+                    </label>
+                    <input
+                      type="date"
+                      name={dateField}
+                      value={editFormData[dateField]}
+                      onChange={handleEditFormChange}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      max={new Date().toISOString().split('T')[0]}
+                      required
+                    />
+                    {errors[dateField] && (
+                      <p className="text-red-500 text-sm mt-1">{errors[dateField]}</p>
+                    )}
+                  </div>
+                ))}
+
+                {/* Riders as radio buttons */}
+                <div className="space-y-2">
+                  {riders_arr.map((rider, index) => (
+                    <label key={index} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        name="riders"
+                        value={rider}
+                        checked={editFormData.riders.includes(rider)}
+                        onChange={handleEditRidersChange}
+                        className={
+                          editFormData.riders.includes(rider)
+                            ? "accent-blue-500"
+                            : "accent-gray-400"
+                        }
+                      />
+                      <span
+                        className={
+                          editFormData.riders.includes(rider)
+                            ? "text-blue-600"
+                            : "text-gray-400"
+                        }
+                      >
+                        {rider}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+
+
               </div>
               <div className="mt-6 flex justify-end space-x-3">
                 <button

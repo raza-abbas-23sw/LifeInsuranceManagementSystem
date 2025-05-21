@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast, { Toaster } from "react-hot-toast";
+
 
 function PolicyInsertionForm() {
   const {
@@ -24,7 +24,7 @@ function PolicyInsertionForm() {
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
   const sumAssuredOptions = [
-    "200,000", "250,000", "300,000", "350,000", "400,000", "450,000", 
+    "200,000", "250,000", "300,000", "350,000", "400,000", "450,000",
     "500,000", "600,000", "700,000", "800,000", "900,000", "1,000,000",
     "1,500,000", "2,000,000", "2,500,000", "3,000,000", "3,500,000",
     "4,000,000", "4,500,000", "5,000,000"
@@ -32,6 +32,7 @@ function PolicyInsertionForm() {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
+
     try {
       // Format the WhatsApp number by removing the +92 if it exists
       const formattedWhatsapp = data.whatsapp.replace(/^\+92\s?/, '');
@@ -40,19 +41,12 @@ function PolicyInsertionForm() {
         whatsapp: formattedWhatsapp,
         sumAssured: parseInt(data.sumAssured.replace(/,/g, '')) // Remove commas and convert to number
       };
-
-      const response = await axios.post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/submit-policy", 
-        payload
-      );
-      
+      const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/submit-policy", payload);
       toast.success(response.data.message || "Policy submitted successfully!");
-      // Reset form after successful submission
-      window.location.reload(); // Or implement form reset logic
+      console.log(response.data.message || "Policy submitted successfully!");
     } catch (err) {
       const errorMessage = err.response?.data?.error || "Failed to submit policy. Please try again.";
       toast.error(errorMessage);
-      console.error("Submission error:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -83,19 +77,24 @@ function PolicyInsertionForm() {
   // Handle WhatsApp number input
   const handleWhatsappChange = (e) => {
     let value = e.target.value;
+    console.log(value)
     // Ensure it starts with +92 3 and has max 12 digits
     if (!value.startsWith("+92 3")) {
       value = "+92 3";
     }
+
+    console.log(value)
     // Limit to 12 digits after +92
     if (value.length > 14) {
       value = value.substring(0, 14);
     }
+
     setValue("whatsapp", value);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br  p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 p-6">
+      <Toaster reverseOrder={false}></Toaster>
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -148,20 +147,13 @@ function PolicyInsertionForm() {
             </label>
             <div className="relative">
               <input
-                type="text"
+                type="email"
                 {...register("email", {
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@gmail\.com$/i,
-                    message: "Please enter a valid Gmail address"
-                  }
                 })}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${errors.email ? "border-red-500" : "border-gray-300 focus:border-blue-500"
                   } transition-all duration-200`}
                 placeholder="example@gmail.com"
               />
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <span className="text-gray-500">@gmail.com</span>
-              </div>
             </div>
             {errors.email && (
               <motion.p
@@ -494,7 +486,9 @@ function PolicyInsertionForm() {
                   </svg>
                   Processing...
                 </span>
-              ) : "Submit Policy"}
+              ) :
+                "Submit Policy"
+              }
             </motion.button>
           </motion.div>
         </motion.form>
