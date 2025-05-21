@@ -45,7 +45,16 @@ const sendEmailNotification = async (policyHolder) => {
             from: process.env.EMAIL_USER,
             to: policyHolder.email,
             subject: 'Insurance Payment Due Reminder',
-            text: `Hello ${policyHolder.holderName}, your insurance payment is due tomorrow. Please make the payment to avoid any penalties.`,
+            text: `Dear ${policyHolder.holderName},
+
+This is a friendly reminder that your insurance payment is due tomorrow. Please ensure the payment is made on time to avoid any penalties or interruptions in your coverage.
+
+If you have already made the payment, please disregard this message.
+
+Thank you for your attention.
+
+Best regards,
+Mehdi Raza`,
         };
 
         await transporter.sendMail(mailOptions);
