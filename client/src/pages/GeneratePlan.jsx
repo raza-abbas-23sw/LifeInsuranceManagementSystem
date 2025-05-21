@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
 
 const GeneratePlan = () => {
-  // Form state without default values
+  // Form state with default values
   const [formData, setFormData] = useState({
     name: "",
     age: "",
-    plan: "",
+    plan: "03/20", // Default to Standard (20 Years)
     sumAssured: "",
     customSumAssured: "",
   });
@@ -22,7 +22,7 @@ const GeneratePlan = () => {
     { value: "03/15", label: "Standard (15 Years)" },
     { value: "03/20", label: "Standard (20 Years)" },
     { value: "81/20", label: "Golden (20 Years)" },
-    { value: "PLA", label: "Platinium (10 Years)", disabled: true },
+    { value: "PLA", label: "Platinum (10 Years)", disabled: true },
     {
       value: "TAKAFUL_ENDOW_20",
       label: "Takaful Endowment (10 Years)",
@@ -55,15 +55,6 @@ const GeneratePlan = () => {
     "30,00,000",
     "Other",
   ];
-
-  const overlayStyle = {
-    width: "100%",
-    minHeight: "100vh",
-    padding: "2rem",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
 
   useEffect(() => {
     // Animation on component mount
@@ -142,18 +133,33 @@ const GeneratePlan = () => {
   };
 
   return (
-    <div>
-      <div style={overlayStyle}>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
+            <span className="text-[#007ACC]">Make Your</span> Insurance Plan
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Customize your perfect insurance solution in just a few steps
+          </p>
+        </motion.div>
+
+        {/* Form Container */}
         <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="max-w-4xl w-full"
+          className="w-full"
         >
-          {/* Form Container */}
           <motion.div
             variants={itemVariants}
-            className="bg-white rounded-xl shadow-2xl overflow-hidden"
+            className="bg-white rounded-2xl shadow-xl overflow-hidden"
             whileHover={{ scale: 1.005 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
@@ -175,7 +181,7 @@ const GeneratePlan = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#007ACC] focus:border-[#007ACC] transition duration-200"
                         placeholder="Enter your full name"
                         required
                         whileFocus={{ scale: 1.02 }}
@@ -196,12 +202,12 @@ const GeneratePlan = () => {
                         type="number"
                         id="age"
                         name="age"
-                        min="18"
-                        max="65"
+                        min="20"
+                        max="60"
                         value={formData.age}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                        placeholder="Enter your age (18-65)"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#007ACC] focus:border-[#007ACC] transition duration-200"
+                        placeholder="Enter your age (20-60)"
                         required
                         whileFocus={{ scale: 1.02 }}
                       />
@@ -222,17 +228,17 @@ const GeneratePlan = () => {
                         name="plan"
                         value={formData.plan}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#007ACC] focus:border-[#007ACC] transition duration-200 appearance-none bg-white"
                         required
                         whileFocus={{ scale: 1.02 }}
                       >
-                        <option value="">Select a plan</option>
                         {planTypes.map((plan, index) => (
                           <option
                             key={index}
                             value={plan.value}
                             disabled={plan.disabled}
                             className={plan.disabled ? "text-gray-400" : ""}
+                            selected={plan.value === "03/20"} // Default selected
                           >
                             {plan.label}
                           </option>
@@ -268,7 +274,7 @@ const GeneratePlan = () => {
                         name="sumAssured"
                         value={formData.sumAssured}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white mb-2"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#007ACC] focus:border-[#007ACC] transition duration-200 appearance-none bg-white mb-2"
                         required
                         whileFocus={{ scale: 1.02 }}
                       >
@@ -314,7 +320,7 @@ const GeneratePlan = () => {
                             }));
                           }}
                           placeholder="Enter custom amount"
-                          className="block w-full px-4 py-3 mt-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                          className="block w-full px-4 py-3 mt-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#007ACC] focus:border-[#007ACC] transition duration-200"
                           required
                         />
                       </motion.div>
@@ -322,7 +328,7 @@ const GeneratePlan = () => {
                   </motion.div>
 
                   {/* Submit Button */}
-                  <motion.div variants={itemVariants}>
+                  <motion.div variants={itemVariants} className="pt-2">
                     <motion.button
                       type="submit"
                       whileHover={{ scale: 1.02 }}
@@ -330,8 +336,8 @@ const GeneratePlan = () => {
                       disabled={isSubmitting}
                       className={`w-full py-4 px-6 rounded-xl text-white text-lg font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                         isSubmitting
-                          ? "bg-blue-400 cursor-not-allowed"
-                          : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+                          ? "bg-[#007ACC]/80 cursor-not-allowed"
+                          : "bg-[#007ACC] hover:bg-[#0066cc] focus:ring-[#007ACC]"
                       }`}
                     >
                       {isSubmitting ? (
@@ -374,7 +380,7 @@ const GeneratePlan = () => {
                               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                           </svg>
-                          GET YOUR PLAN
+                          GENERATE YOUR PLAN
                         </span>
                       )}
                     </motion.button>
@@ -383,301 +389,167 @@ const GeneratePlan = () => {
               </form>
             </div>
           </motion.div>
+        </motion.div>
 
-          {/* Results Display (unchanged from original) */}
-          {insuranceResults && (
+        {/* Results Display (unchanged from original) */}
+        {insuranceResults && (
+          <div
+            style={{
+              fontFamily: "Arial, sans-serif",
+              lineHeight: 1.6,
+              maxWidth: "800px",
+              margin: "0 auto",
+              padding: "20px",
+              border: "2px solid #000",
+              backgroundColor: "#fff",
+              marginTop: "40px",
+            }}
+          >
             <div
               style={{
-                fontFamily: "Arial, sans-serif",
-                lineHeight: 1.6,
-                maxWidth: "800px",
-                margin: "0 auto",
-                padding: "20px",
-                border: "2px solid #000",
-                backgroundColor: "#fff",
-                marginTop: "40px",
+                textAlign: "center",
+                marginBottom: "20px",
+                border: "1px solid #000",
+                position: "relative",
               }}
             >
-              <div
+              <img
+                src={logo}
+                alt="LIC Logo"
+                className="hidden sm:block"
+                style={{
+                  width: "60px",
+                  height: "auto",
+                  position: "absolute",
+                  top: "50%",
+                  left: "10px",
+                  transform: "translateY(-50%)",
+                }}
+              />
+              <img
+                src={logo}
+                alt="LIC Logo"
+                className="hidden sm:block"
+                style={{
+                  width: "60px",
+                  height: "auto",
+                  position: "absolute",
+                  top: "50%",
+                  right: "10px",
+                  transform: "translateY(-50%)",
+                }}
+              />
+              <h1
                 style={{
                   textAlign: "center",
-                  marginBottom: "20px",
-                  border: "1px solid #000",
-                  position: "relative",
-                }}
-              >
-                <img
-                  src={logo}
-                  alt="LIC Logo"
-                  className="hidden sm:block"
-                  style={{
-                    width: "60px",
-                    height: "auto",
-                    position: "absolute",
-                    top: "50%",
-                    left: "10px",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-                <img
-                  src={logo}
-                  alt="LIC Logo"
-                  className="hidden sm:block"
-                  style={{
-                    width: "60px",
-                    height: "auto",
-                    position: "absolute",
-                    top: "50%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-                <h1
-                  style={{
-                    textAlign: "center",
-                    fontSize: "24px",
-                    marginBottom: "0px",
-                    border: "0px solid #000",
-                    fontWeight: "bold",
-                  }}
-                >
-                  State Life Insurance Pakistan
-                </h1>
-                <p
-                  style={{
-                    textAlign: "center",
-                    margin: "0",
-                    border: "0px solid #000",
-                  }}
-                >
-                  This plan is prepared For
-                  <br />
-                  <strong>Mr. {insuranceResults[0].value}</strong>
-                  <br />
-                  Sum Assured {insuranceResults[3].value}
-                </p>
-              </div>
-
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  margin: "15px 0",
-                  border: "1px solid #000",
-                  padding: "10px",
-                }}
-              >
-                <tbody>
-                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
-                    <td>Age</td>
-                    <td style={{ border: "1px solid #000" }}>
-                      {insuranceResults[1].value}
-                    </td>
-                  </tr>
-                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
-                    <td style={{ border: "1px solid #000" }}>Plan</td>
-                    <td style={{ border: "1px solid #000" }}>
-                      {insuranceResults[2].value}
-                    </td>
-                  </tr>
-                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
-                    <td style={{ border: "1px solid #000" }}>Sum Assured</td>
-                    <td style={{ border: "1px solid #000" }}>
-                      Rs. {insuranceResults[3].value}
-                    </td>
-                  </tr>
-                  <tr style={{ border: "1px solid #000", textAlign: "center" }}>
-                    <td style={{ border: "1px solid #000" }}>Annual Premium</td>
-                    <td style={{ border: "1px solid #000" }}>
-                      Rs. {insuranceResults[4].value}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-              {/* <hr /> */}
-
-              <h2
-                style={{
-                  fontSize: "20px",
-                  border: "1px solid #000",
-                  marginTop: "20px",
-                  textAlign: "center",
-                  borderBottom: "0px",
-                  backgroundColor: "#007ACC",
-                  color: "#fff",
+                  fontSize: "24px",
+                  marginBottom: "0px",
+                  border: "0px solid #000",
                   fontWeight: "bold",
-                  padding: "5px",
                 }}
               >
-                Bonus Schedule
-              </h2>
-
-              <table
+                State Life Insurance Pakistan
+              </h1>
+              <p
                 style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  border: "1px solid #000",
-                  borderTop: "0px",
+                  textAlign: "center",
+                  margin: "0",
+                  border: "0px solid #000",
                 }}
               >
-                <tbody>
-                  <tr style={{ border: "1px solid #000" }}>
-                    <td style={{ border: "1px solid #000" }}>
-                      For the first 5 years(per year)
-                    </td>
-                    <td
-                      style={{ border: "1px solid #000", textAlign: "center" }}
-                    >
-                      {Math.round(insuranceResults[6].value / 5)} X 5
-                    </td>
-                    <td
-                      style={{ border: "1px solid #000", textAlign: "center" }}
-                    >
-                      Rs {Math.round(insuranceResults[6].value)}
-                    </td>
-                  </tr>
-                  {insuranceResults[2].value !== "Standard (10 Years)" &&
-                    insuranceResults[2].value !== "Standard (15 Years)" && (
-                      <>
-                        <tr style={{ border: "1px solid #000" }}>
-                          <td style={{ border: "1px solid #000" }}>
-                            From 6th to 16th year (per year)
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            {Math.round(insuranceResults[7].value / 11)} X 11
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            Rs {Math.round(insuranceResults[7].value)}
-                          </td>
-                        </tr>
-                        <tr style={{ border: "1px solid #000" }}>
-                          <td style={{ border: "1px solid #000" }}>
-                            From 17th to 20th year(per year)
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            {Math.round(insuranceResults[8].value / 4)} X 4
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            Rs {Math.round(insuranceResults[8].value)}
-                          </td>
-                        </tr>
-                        <tr style={{ border: "1px solid #000" }}>
-                          <td style={{ border: "1px solid #000" }}>
-                            Terminal Bonus (At maturity)
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            {insuranceResults[9].value} X 1
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            Rs {insuranceResults[9].value}
-                          </td>
-                        </tr>
-                        <tr style={{ border: "1px solid #000" }}>
-                          <td style={{ border: "1px solid #000" }}>
-                            Loyalty Terminal Bonus(At maturity)
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            {insuranceResults[10].value} X 1
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid #000",
-                              textAlign: "center",
-                            }}
-                          >
-                            Rs {insuranceResults[10].value}
-                          </td>
-                        </tr>
-                      </>
-                    )}
-                  {insuranceResults[2].value === "Standard (10 Years)" && (
-                    <>
-                      <tr style={{ border: "1px solid #000" }}>
-                        <td style={{ border: "1px solid #000" }}>
-                          From 6th to 10th year (per year)
-                        </td>
-                        <td
-                          style={{
-                            border: "1px solid #000",
-                            textAlign: "center",
-                          }}
-                        >
-                          {Math.round(insuranceResults[7].value / 5)} X 5
-                        </td>
-                        <td
-                          style={{
-                            border: "1px solid #000",
-                            textAlign: "center",
-                          }}
-                        >
-                          Rs {insuranceResults[7].value}
-                        </td>
-                      </tr>
-                      <tr style={{ border: "1px solid #000" }}>
-                        <td style={{ border: "1px solid #000" }}>
-                          Loyalty Terminal Bonus(At maturity)
-                        </td>
-                        <td
-                          style={{
-                            border: "1px solid #000",
-                            textAlign: "center",
-                          }}
-                        >
-                          {insuranceResults[8].value} X 1
-                        </td>
-                        <td
-                          style={{
-                            border: "1px solid #000",
-                            textAlign: "center",
-                          }}
-                        >
-                          Rs {insuranceResults[8].value}
-                        </td>
-                      </tr>
-                    </>
-                  )}
+                This plan is prepared For
+                <br />
+                <strong>Mr. {insuranceResults[0].value}</strong>
+                <br />
+                Sum Assured {insuranceResults[3].value}
+              </p>
+            </div>
 
-                  {insuranceResults[2].value === "Standard (15 Years)" && (
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                margin: "15px 0",
+                border: "1px solid #000",
+                padding: "10px",
+              }}
+            >
+              <tbody>
+                <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                  <td>Age</td>
+                  <td style={{ border: "1px solid #000" }}>
+                    {insuranceResults[1].value}
+                  </td>
+                </tr>
+                <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                  <td style={{ border: "1px solid #000" }}>Plan</td>
+                  <td style={{ border: "1px solid #000" }}>
+                    {insuranceResults[2].value}
+                  </td>
+                </tr>
+                <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                  <td style={{ border: "1px solid #000" }}>Sum Assured</td>
+                  <td style={{ border: "1px solid #000" }}>
+                    Rs. {insuranceResults[3].value}
+                  </td>
+                </tr>
+                <tr style={{ border: "1px solid #000", textAlign: "center" }}>
+                  <td style={{ border: "1px solid #000" }}>Annual Premium</td>
+                  <td style={{ border: "1px solid #000" }}>
+                    Rs. {insuranceResults[4].value}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            {/* <hr /> */}
+
+            <h2
+              style={{
+                fontSize: "20px",
+                border: "1px solid #000",
+                marginTop: "20px",
+                textAlign: "center",
+                borderBottom: "0px",
+                backgroundColor: "#007ACC",
+                color: "#fff",
+                fontWeight: "bold",
+                padding: "5px",
+              }}
+            >
+              Bonus Schedule
+            </h2>
+
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                border: "1px solid #000",
+                borderTop: "0px",
+              }}
+            >
+              <tbody>
+                <tr style={{ border: "1px solid #000" }}>
+                  <td style={{ border: "1px solid #000" }}>
+                    For the first 5 years(per year)
+                  </td>
+                  <td
+                    style={{ border: "1px solid #000", textAlign: "center" }}
+                  >
+                    {Math.round(insuranceResults[6].value / 5)} X 5
+                  </td>
+                  <td
+                    style={{ border: "1px solid #000", textAlign: "center" }}
+                  >
+                    Rs {Math.round(insuranceResults[6].value)}
+                  </td>
+                </tr>
+                {insuranceResults[2].value !== "Standard (10 Years)" &&
+                  insuranceResults[2].value !== "Standard (15 Years)" && (
                     <>
                       <tr style={{ border: "1px solid #000" }}>
                         <td style={{ border: "1px solid #000" }}>
-                          From 6th to 15th year (per year)
+                          From 6th to 16th year (per year)
                         </td>
                         <td
                           style={{
@@ -685,7 +557,7 @@ const GeneratePlan = () => {
                             textAlign: "center",
                           }}
                         >
-                          {Math.round(insuranceResults[7].value / 10)} X 10
+                          {Math.round(insuranceResults[7].value / 11)} X 11
                         </td>
                         <td
                           style={{
@@ -698,7 +570,7 @@ const GeneratePlan = () => {
                       </tr>
                       <tr style={{ border: "1px solid #000" }}>
                         <td style={{ border: "1px solid #000" }}>
-                          Terminal Bonus (At maturity)
+                          From 17th to 20th year(per year)
                         </td>
                         <td
                           style={{
@@ -706,7 +578,7 @@ const GeneratePlan = () => {
                             textAlign: "center",
                           }}
                         >
-                          {insuranceResults[8].value} X 1
+                          {Math.round(insuranceResults[8].value / 4)} X 4
                         </td>
                         <td
                           style={{
@@ -714,12 +586,12 @@ const GeneratePlan = () => {
                             textAlign: "center",
                           }}
                         >
-                          Rs {insuranceResults[8].value}
+                          Rs {Math.round(insuranceResults[8].value)}
                         </td>
                       </tr>
                       <tr style={{ border: "1px solid #000" }}>
                         <td style={{ border: "1px solid #000" }}>
-                          Loyalty Terminal Bonus(At maturity)
+                          Terminal Bonus (At maturity)
                         </td>
                         <td
                           style={{
@@ -738,144 +610,278 @@ const GeneratePlan = () => {
                           Rs {insuranceResults[9].value}
                         </td>
                       </tr>
+                      <tr style={{ border: "1px solid #000" }}>
+                        <td style={{ border: "1px solid #000" }}>
+                          Loyalty Terminal Bonus(At maturity)
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          {insuranceResults[10].value} X 1
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            textAlign: "center",
+                          }}
+                        >
+                          Rs {insuranceResults[10].value}
+                        </td>
+                      </tr>
                     </>
                   )}
+                {insuranceResults[2].value === "Standard (10 Years)" && (
+                  <>
+                    <tr style={{ border: "1px solid #000" }}>
+                      <td style={{ border: "1px solid #000" }}>
+                        From 6th to 10th year (per year)
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        {Math.round(insuranceResults[7].value / 5)} X 5
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        Rs {insuranceResults[7].value}
+                      </td>
+                    </tr>
+                    <tr style={{ border: "1px solid #000" }}>
+                      <td style={{ border: "1px solid #000" }}>
+                        Loyalty Terminal Bonus(At maturity)
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        {insuranceResults[8].value} X 1
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        Rs {insuranceResults[8].value}
+                      </td>
+                    </tr>
+                  </>
+                )}
 
-                  <tr style={{ border: "1px solid #000" }}>
-                    <td style={{ border: "1px solid #000" }}>Sum Assured</td>
-                    <td style={{ border: "1px solid #000" }}></td>
-                    <td
-                      style={{ border: "1px solid #000", textAlign: "center" }}
-                    >
-                      Rs {insuranceResults[3].value}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                {insuranceResults[2].value === "Standard (15 Years)" && (
+                  <>
+                    <tr style={{ border: "1px solid #000" }}>
+                      <td style={{ border: "1px solid #000" }}>
+                        From 6th to 15th year (per year)
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        {Math.round(insuranceResults[7].value / 10)} X 10
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        Rs {Math.round(insuranceResults[7].value)}
+                      </td>
+                    </tr>
+                    <tr style={{ border: "1px solid #000" }}>
+                      <td style={{ border: "1px solid #000" }}>
+                        Terminal Bonus (At maturity)
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        {insuranceResults[8].value} X 1
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        Rs {insuranceResults[8].value}
+                      </td>
+                    </tr>
+                    <tr style={{ border: "1px solid #000" }}>
+                      <td style={{ border: "1px solid #000" }}>
+                        Loyalty Terminal Bonus(At maturity)
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        {insuranceResults[9].value} X 1
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #000",
+                          textAlign: "center",
+                        }}
+                      >
+                        Rs {insuranceResults[9].value}
+                      </td>
+                    </tr>
+                  </>
+                )}
 
-              <div
-                style={{
-                  fontSize: "20px",
-                  border: "1px solid #000",
-                  marginTop: "20px",
-                  textAlign: "center",
-                  display: "flex",
-                  justifyContent: "space-around",
-                  backgroundColor: "#007ACC",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  padding: "5px",
-                }}
-              >
-                <h1> Current Maturity Total</h1>
-                <h1>Rs {insuranceResults[5].value}</h1>
-              </div>
+                <tr style={{ border: "1px solid #000" }}>
+                  <td style={{ border: "1px solid #000" }}>Sum Assured</td>
+                  <td style={{ border: "1px solid #000" }}></td>
+                  <td
+                    style={{ border: "1px solid #000", textAlign: "center" }}
+                  >
+                    Rs {insuranceResults[3].value}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-              <p
-                style={{
-                  textAlign: "center",
-                  border: "1px solid #000",
-                  marginTop: "10px",
-                }}
-              >
-                The Current Bonus Rates have been used in the illustration,
-                Future Bonus depends on future Acturial Valuation
-              </p>
-
-              <h1
-                style={{
-                  fontSize: "18px",
-                  marginTop: "10px",
-                  border: "1px solid #000",
-                  textAlign: "center",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  backgroundColor: "#007ACC",
-                  padding: "5px",
-                }}
-              >
-                Expected Maturity Return is Rs. {insuranceResults[3].value * 4}
-              </h1>
-
-              <h3
-                style={{
-                  fontSize: "18px",
-                  marginTop: "10px",
-                  border: "1px solid #000",
-                  textAlign: "center",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  backgroundColor: "#007ACC",
-                  padding: "5px",
-                }}
-              >
-                Coverage
-              </h3>
-
-              <p
-                style={{
-                  textAlign: "center",
-                  border: "1px solid #000",
-                  borderTop: "0px",
-                }}
-              >
-                In Case of Accidental Death (God Forbid) From 1st day
-                <br />
-                Rs. {insuranceResults[3].value * 2} + Bonus(es)
-                <br />
-                In Case of Death (God Forbid) From 1st day
-                <br />
-                Rs. {insuranceResults[3].value} + Bonus(es)
-              </p>
-
-              <h3
-                style={{
-                  fontSize: "18px",
-                  marginTop: "10px",
-                  border: "1px solid #000",
-                  textAlign: "center",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  backgroundColor: "#007ACC",
-                  padding: "5px",
-                }}
-              >
-                Other Benefits
-              </h3>
-
-              <p
-                style={{
-                  textAlign: "left",
-                  border: "1px solid #000",
-                  marginTop: "0px",
-                  borderTop: "0px",
-                }}
-              >
-                1) Sum Assured and all bonuses(es) are Guaranteed by Federal
-                Government of Pakistan
-                <br />
-                2) Loan Facility (After 3 Years).
-                <br />
-                3) Automatic Premium Loan Facility.
-              </p>
-
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #000",
-                  textAlign: "center",
-                  backgroundColor: "#007ACC",
-                  color: "#fff",
-                  padding: "5px",
-                }}
-              >
-                <p>
-                  Mehdi Raza || Senior Sales Manager || Cells 03023646514
-                </p>
-              </div>
+            <div
+              style={{
+                fontSize: "20px",
+                border: "1px solid #000",
+                marginTop: "20px",
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "space-around",
+                backgroundColor: "#007ACC",
+                color: "#fff",
+                fontWeight: "bold",
+                padding: "5px",
+              }}
+            >
+              <h1> Current Maturity Total</h1>
+              <h1>Rs {insuranceResults[5].value}</h1>
             </div>
-          )}
-        </motion.div>
+
+            <p
+              style={{
+                textAlign: "center",
+                border: "1px solid #000",
+                marginTop: "10px",
+              }}
+            >
+              The Current Bonus Rates have been used in the illustration,
+              Future Bonus depends on future Acturial Valuation
+            </p>
+
+            <h1
+              style={{
+                fontSize: "18px",
+                marginTop: "10px",
+                border: "1px solid #000",
+                textAlign: "center",
+                color: "#fff",
+                fontWeight: "bold",
+                backgroundColor: "#007ACC",
+                padding: "5px",
+              }}
+            >
+              Expected Maturity Return is Rs. {insuranceResults[3].value * 4}
+            </h1>
+
+            <h3
+              style={{
+                fontSize: "18px",
+                marginTop: "10px",
+                border: "1px solid #000",
+                textAlign: "center",
+                color: "#fff",
+                fontWeight: "bold",
+                backgroundColor: "#007ACC",
+                padding: "5px",
+              }}
+            >
+              Coverage
+            </h3>
+
+            <p
+              style={{
+                textAlign: "center",
+                border: "1px solid #000",
+                borderTop: "0px",
+              }}
+            >
+              In Case of Accidental Death (God Forbid) From 1st day
+              <br />
+              Rs. {insuranceResults[3].value * 2} + Bonus(es)
+              <br />
+              In Case of Death (God Forbid) From 1st day
+              <br />
+              Rs. {insuranceResults[3].value} + Bonus(es)
+            </p>
+
+            <h3
+              style={{
+                fontSize: "18px",
+                marginTop: "10px",
+                border: "1px solid #000",
+                textAlign: "center",
+                color: "#fff",
+                fontWeight: "bold",
+                backgroundColor: "#007ACC",
+                padding: "5px",
+              }}
+            >
+              Other Benefits
+            </h3>
+
+            <p
+              style={{
+                textAlign: "left",
+                border: "1px solid #000",
+                marginTop: "0px",
+                borderTop: "0px",
+              }}
+            >
+              1) Sum Assured and all bonuses(es) are Guaranteed by Federal
+              Government of Pakistan
+              <br />
+              2) Loan Facility (After 3 Years).
+              <br />
+              3) Automatic Premium Loan Facility.
+            </p>
+
+            <div
+              style={{
+                marginTop: "10px",
+                border: "1px solid #000",
+                textAlign: "center",
+                backgroundColor: "#007ACC",
+                color: "#fff",
+                padding: "5px",
+              }}
+            >
+              <p>
+                Mehdi Raza || Senior Sales Manager || Cells 03023646514
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
