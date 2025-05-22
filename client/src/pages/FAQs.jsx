@@ -278,6 +278,15 @@ const FAQs = () => {
       }
     }
   };
+    const redirectToWhatsApp = () => {
+    const phoneNumber = "923023646514"; // Replace with actual State Life WhatsApp number
+    const message =
+      "Hello, I would like to inquire about State Life insurance plans.";
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappUrl, "_blank");
+  };
 
   return (
     <Box 
@@ -525,6 +534,7 @@ const FAQs = () => {
               fontSize: '1rem',
               boxShadow: '0 4px 15px rgba(0, 122, 204, 0.3)'
             }}
+            onClick={redirectToWhatsApp}
           >
             Contact Support
           </motion.button>
