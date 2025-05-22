@@ -4,9 +4,11 @@ import { FiLock, FiMail, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useState } from "react";
+import axios from "axios";
+import {toast, Toaster}  from "react-hot-toast";
 
 
-const SigninPage = () => {
+const SigninPage = ({ isLoggedIn, setIsLoggedIn}) => {
   const customBlue = "#007ACC";
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -40,7 +42,7 @@ const SigninPage = () => {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let isValid = true;
 
@@ -69,7 +71,17 @@ const SigninPage = () => {
     if (isValid) {
       // Here you can handle the form submission
       console.log("Form data:", formData);
-      // Add your submission logic here (e.g., API call)
+      try {
+        const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/signin", formData, {
+          withCredentials: true
+        });
+        toast.success(response?.data?.message)
+        setIsLoggedIn(true)
+        return response?.data?.message
+      } catch (err) {
+        toast.error(err.response?.data?.error || err.message);
+      }
+
     }
   };
 
@@ -78,6 +90,7 @@ const SigninPage = () => {
   return (
     <div className="font-sans min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#007ACC10] to-[#007ACC01]">
       {/* Floating background elements */}
+      <Toaster />
       <motion.div
         animate={{
           rotateY: [0, 180, 360],

@@ -41,7 +41,9 @@ function PolicyInsertionForm() {
         whatsapp: formattedWhatsapp,
         sumAssured: parseInt(data.sumAssured.replace(/,/g, '')) // Remove commas and convert to number
       };
-      const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/submit-policy", payload);
+      const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/submit-policy", payload, {
+        withCredentials: true
+      });
       toast.success(response.data.message || "Policy submitted successfully!");
       console.log(response.data.message || "Policy submitted successfully!");
     } catch (err) {

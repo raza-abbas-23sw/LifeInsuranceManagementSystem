@@ -7,12 +7,20 @@ import cron from 'node-cron';
 import nodemailer from 'nodemailer';
 import { addMonths, differenceInMonths, isSameDay } from 'date-fns';
 import PQueue from 'p-queue';
+import cookieParser from 'cookie-parser';
+import { signup, signin } from './Controllers/authController.js';
+import User from './Schema/User.js';
+import jwt from 'jsonwebtoken';
 
 const emailQueue = new PQueue({ concurrency: 5 }); // Process 5 emails at once
 const server = express();
 
 server.use(express.json());
-server.use(cors())
+server.use(cookieParser());
+server.use(cors({
+    origin: 'http://localhost:5173', // Your frontend URL
+    credentials: true
+}));
 
 // MongoDB connection
 mongoose
@@ -23,6 +31,9 @@ mongoose
         });
         process.exit(1); // Exit the process to avoid running in a broken state
     });
+
+
+
 
 // ************************EMAILING SETUP*********************************
 
@@ -116,7 +127,50 @@ cron.schedule('0 0 * * *', async () => {
 //*************************EMAILING SETUP END************************************* */
 
 
-server.post("/submit-policy", async (req, res) => {
+server.get("/check-auth", (req, res) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return res.status(200).json({ message: "Authenticated", user: decoded });
+  } catch (err) {
+    return res.status(401).json({ error: "Invalid token" });
+  }
+});
+
+
+
+const protect = (req, res, next) => {
+  const token = req.cookies.jwt;
+
+
+  // If no token, block the request
+  if (!token) {
+    return res.status(401).json({ error: 'Not authorized, token missing' });
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = decoded;
+    next();
+  } catch (err) {
+    console.error("JWT Verification failed:", err);
+    return res.status(401).json({ error: 'Not authorized, token invalid' });
+  }
+};
+
+
+server.post('/signup', signup);
+server.post('/signin', signin);
+
+
+server.post("/submit-policy", protect, async (req, res) => {
     try {
         const {
             holderName,
@@ -165,7 +219,7 @@ server.post("/submit-policy", async (req, res) => {
 });
 
 
-server.get("/fetch-policies", async (req, res) => {
+server.get("/fetch-policies", protect, async (req, res) => {
     // return res.json({ message: "Server error" })
     try {
         const policies = await Policy.find();
@@ -177,7 +231,7 @@ server.get("/fetch-policies", async (req, res) => {
 })
 
 
-server.post("/delete-policy", async (req, res) => {
+server.post("/delete-policy", protect, async (req, res) => {
     try {
         const { policyId } = req.body;
         console.log(policyId)
@@ -201,7 +255,7 @@ server.post("/delete-policy", async (req, res) => {
     }
 })
 
-server.put("/update-policy", async (req, res) => {
+server.put("/update-policy", protect, async (req, res) => {
     const {
         policyId,
         holderName,

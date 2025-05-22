@@ -34,10 +34,12 @@ const formatDate = (dateString) => {
 
 const fetchPolicies = async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_SERVER_DOMAIN}/fetch-policies`);
+    const response = await axios.get(`${import.meta.env.VITE_SERVER_DOMAIN}/fetch-policies`, {
+      withCredentials: true
+    });
     return response.data.policies;
   } catch (err) {
-    toast.error("Failed to fetch policies. Please try again later.");
+    toast.error(err?.response?.data?.error || "Failed to fetch policies. Please try again later.");
     throw err;
   }
 };
@@ -45,13 +47,14 @@ const fetchPolicies = async () => {
 
 // SERVER CONNECTIONS
 const deletePolicy = async (policyId) => {
-  console.log("POLICYID", policyId)
   try {
-    await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/delete-policy", { policyId });
+    const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/delete-policy", { policyId }, {
+      withCredentials: true
+    });
     toast.success("Policy deleted successfully");
     return true;
-  } catch (err) {
-    toast.error("Failed to delete policy. Please try again later.");
+  } catch (error){
+    toast.error(error?.response?.data?.error || "Failed to delete policy. Please try again later.");
     return false;
   }
 };
@@ -60,7 +63,9 @@ const updatePolicy = async (policyId, updatedData) => {
   console.log("policyId: ", policyId)
   console.log("updatedData: ", updatedData)
   try {
-    await axios.put(import.meta.env.VITE_SERVER_DOMAIN + "/update-policy", { policyId, ...updatedData });
+    await axios.put(import.meta.env.VITE_SERVER_DOMAIN + "/update-policy", { policyId, ...updatedData }, {
+      withCredentials: true
+    });
     toast.success("Policy updated successfully");
     return true;
   } catch (err) {
