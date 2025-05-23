@@ -128,47 +128,60 @@ cron.schedule('0 0 * * *', async () => {
 
 
 server.get("/check-auth", (req, res) => {
-  const token = req.cookies.jwt;
+    const token = req.cookies.jwt;
 
-  if (!token) {
-    return res.status(401).json({ error: "Not authenticated" });
-  }
+    if (!token) {
+        return res.status(401).json({ error: "Not authenticated" });
+    }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return res.status(200).json({ message: "Authenticated", user: decoded });
-  } catch (err) {
-    return res.status(401).json({ error: "Invalid token" });
-  }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return res.status(200).json({ message: "Authenticated", user: decoded });
+    } catch (err) {
+        return res.status(401).json({ error: "Invalid token" });
+    }
 });
 
 
 
 const protect = (req, res, next) => {
-  const token = req.cookies.jwt;
+    const token = req.cookies.jwt;
 
 
-  // If no token, block the request
-  if (!token) {
-    return res.status(401).json({ error: 'Not authorized, token missing' });
-  }
+    // If no token, block the request
+    if (!token) {
+        return res.status(401).json({ error: 'Not authorized, token missing' });
+    }
 
-  try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = decoded;
-    next();
-  } catch (err) {
-    console.error("JWT Verification failed:", err);
-    return res.status(401).json({ error: 'Not authorized, token invalid' });
-  }
+        req.user = decoded;
+        next();
+    } catch (err) {
+        console.error("JWT Verification failed:", err);
+        return res.status(401).json({ error: 'Not authorized, token invalid' });
+    }
 };
 
 
 server.post('/signup', signup);
 server.post('/signin', signin);
+server.post("/logout", (req, res) => {
+    try {
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+        });
 
+        return res.status(200).json({ message: "Successfully logged out" });
+    } catch (err) {
+        console.log("error logging out: ", err)
+        return res.status(500).json({ error: "Server error", error: err.message });
+    }
+});
 
 server.post("/submit-policy", protect, async (req, res) => {
     try {
