@@ -6,6 +6,8 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useState } from "react";
 import axios from "axios";
 import {toast, Toaster}  from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 
 
 const SigninPage = ({ isLoggedIn, setIsLoggedIn}) => {
@@ -14,6 +16,9 @@ const SigninPage = ({ isLoggedIn, setIsLoggedIn}) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const navigate = useNavigate();
+
 
   // Animation variants
   const container = {
@@ -69,19 +74,19 @@ const SigninPage = ({ isLoggedIn, setIsLoggedIn}) => {
     }
 
     if (isValid) {
-      // Here you can handle the form submission
-      console.log("Form data:", formData);
       try {
         const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/signin", formData, {
           withCredentials: true
         });
         toast.success(response?.data?.message)
         setIsLoggedIn(true)
+        setTimeout(() => {
+        navigate("/");           
+        }, 1000);
         return response?.data?.message
       } catch (err) {
         toast.error(err.response?.data?.error || err.message);
       }
-
     }
   };
 
@@ -258,7 +263,7 @@ const SigninPage = ({ isLoggedIn, setIsLoggedIn}) => {
           >
 
             <div className="text-gray-600">
-              New user?{" "}
+              Want new account?{" "}
               <Link
                 to="/signup"
                 className="font-medium"

@@ -13,8 +13,8 @@ export default function AppRoutes( {isLoggedIn, setIsLoggedIn}) {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/signin" element={<SigninPage  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
-      <Route path="/signup" element={<SignupPage  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
+      <Route path="/admin_signin_portal_LIMS" element={<SigninPage  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
+      <Route path="/admin_signup_portal_LIMS" element={<SignupPage  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
       <Route path="/generate-plan" element={<GeneratePlan />} />
       <Route path="/see-plans" element={<SeePlans />} />
       <Route path="/search" element={<Search />} />

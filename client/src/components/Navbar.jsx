@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 import axios from "axios";
+import { toast, Toaster } from "react-hot-toast";
 
-export default function Navbar({ isLoggedIn }) {
+export default function Navbar({ setIsLoggedIn, isLoggedIn }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -30,13 +31,17 @@ export default function Navbar({ isLoggedIn }) {
   }, []);
 
   const handleLogout = async () => {
-    // try {
-    //   await axios.post('/api/signout', {}, { withCredentials: true });
-    //   window.location.href = '/';
-    // } catch (error) {
-    //   console.error('Logout failed:', error);
-    // }
-    console.log("logout route is not yet developed")
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/logout",
+        {},
+        { withCredentials: true }
+      );
+      toast.success(response.data.message);
+      setIsLoggedIn(false);
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Logout failed");
+    }
   };
 
   const navItems = [
@@ -62,6 +67,7 @@ export default function Navbar({ isLoggedIn }) {
 
   return (
     <header className={`w-full fixed z-50 font-sans transition-all duration-500 ${scrolled ? "bg-[#007ACC] shadow-xl py-2" : "bg-[#007ACC] backdrop-blur-sm py-4"}`}>
+      <Toaster />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center relative z-10">
         <Link to="/" className="flex items-center gap-3 group">
           <motion.img
@@ -154,8 +160,18 @@ export default function Navbar({ isLoggedIn }) {
               </div>
             )
           )}
-
           <motion.div className="relative ml-4 group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            {isLoggedIn && (
+              <button
+                onClick={handleLogout}
+                className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-semibold text-[#007ACC] transition-all duration-500 rounded-full bg-white hover:bg-gradient-to-r hover:from-white hover:to-blue-100 group"
+              >
+                <span className="relative z-10">Log Out</span>
+              </button>
+            )}
+          </motion.div>
+
+          {/* <motion.div className="relative ml-4 group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
@@ -171,7 +187,7 @@ export default function Navbar({ isLoggedIn }) {
                 <span className="relative z-10">Sign In</span>
               </Link>
             )}
-          </motion.div>
+          </motion.div> */}
         </nav>
 
         {/* Mobile Toggle Button */}
@@ -253,7 +269,17 @@ export default function Navbar({ isLoggedIn }) {
               </div>
             )
           )}
-
+          <motion.div className="relative group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            {isLoggedIn && (
+              <button
+                onClick={handleLogout}
+                className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-semibold text-[#007ACC] transition-all duration-500 rounded-full bg-white hover:bg-gradient-to-r hover:from-white hover:to-blue-100 group"
+              >
+                <span className="relative z-10">Log Out</span>
+              </button>
+            )}
+          </motion.div>
+          {/* 
           <motion.div className="mt-4" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             {isLoggedIn ? (
               <button
@@ -271,9 +297,9 @@ export default function Navbar({ isLoggedIn }) {
                 Sign In
               </Link>
             )}
-          </motion.div>
+          </motion.div> */}
         </div>
       </motion.div>
-    </header>
+    </header >
   );
 }

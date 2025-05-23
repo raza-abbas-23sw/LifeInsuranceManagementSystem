@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar isLoggedIn={isLoggedIn}  setIsLoggedIn={setIsLoggedIn}/>
       <main className="pt-20 xl:pt-13">
         <ParticleBG />
         <AppRoutes isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />

@@ -5,39 +5,16 @@ import {
   FiHeart,
   FiDollarSign,
   FiClock,
-  FiUsers,
   FiArrowRight,
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-// import { Link } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
   const customBlue = "oklch(0.57 0.15 248.52)";
 
-  // Animation variants
-  const container = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
 
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
 
   const features = [
     {

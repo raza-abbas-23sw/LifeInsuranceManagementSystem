@@ -4,10 +4,11 @@ import { FiLock, FiMail, FiUser } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useState } from "react";
-import {toast, Toaster}  from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const SignupPage = ({isLoggedIn, setIsLoggedIn}) => {
+const SignupPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const customBlue = "#007ACC";
     const [isVisible, setIsVisible] = useState(false);
     const [formData, setFormData] = useState({
@@ -18,6 +19,8 @@ const SignupPage = ({isLoggedIn, setIsLoggedIn}) => {
     const [usernameError, setUsernameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    const navigate = useNavigate();
 
     // Animation variants
     const container = {
@@ -84,17 +87,18 @@ const SignupPage = ({isLoggedIn, setIsLoggedIn}) => {
         }
 
         if (isValid) {
-            console.log("Form data:", formData);
             try {
                 const response = await axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/signup", formData, {
                     withCredentials: true
                 });
                 toast.success(response.data.message)
                 setIsLoggedIn(true)
+                setTimeout(() => {
+                    navigate("/");
+                }, 1000);
 
                 return response?.data?.message
             } catch (error) {
-                console.log(error?.response?.data?.error)
                 toast.error(error?.response?.data?.error)
             }
         }
