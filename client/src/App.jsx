@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import ParticleBG from "./components/ParticleBG";
 import AppRoutes from "./routes/AppRoutes";
 import axios from "axios";
+import Loading from "./components/Loading";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,7 +28,7 @@ function App() {
     checkAuth();
   }, []);
 
-  if (!authChecked) return <div>Loading...</div>; // Optional
+  if (!authChecked) return <Loading/>; // Optional
 
 
   return (

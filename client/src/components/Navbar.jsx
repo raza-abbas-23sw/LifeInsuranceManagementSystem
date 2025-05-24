@@ -171,23 +171,7 @@ export default function Navbar({ setIsLoggedIn, isLoggedIn }) {
             )}
           </motion.div>
 
-          {/* <motion.div className="relative ml-4 group" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-semibold text-[#007ACC] transition-all duration-500 rounded-full bg-white hover:bg-gradient-to-r hover:from-white hover:to-blue-100 group"
-              >
-                <span className="relative z-10">Log Out</span>
-              </button>
-            ) : (
-              <Link
-                to="/signin"
-                className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-semibold text-[#007ACC] transition-all duration-500 rounded-full bg-white hover:bg-gradient-to-r hover:from-white hover:to-blue-100 group"
-              >
-                <span className="relative z-10">Sign In</span>
-              </Link>
-            )}
-          </motion.div> */}
+          
         </nav>
 
         {/* Mobile Toggle Button */}
@@ -279,25 +263,7 @@ export default function Navbar({ setIsLoggedIn, isLoggedIn }) {
               </button>
             )}
           </motion.div>
-          {/* 
-          <motion.div className="mt-4" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="block w-full text-center px-6 py-3 bg-white text-[#007ACC] text-lg font-bold rounded-full shadow-md hover:bg-blue-50 transition-all duration-300"
-              >
-                Log Out
-              </button>
-            ) : (
-              <Link
-                to="/signin"
-                className="block text-center px-6 py-3 bg-white text-[#007ACC] text-lg font-bold rounded-full shadow-md hover:bg-blue-50 transition-all duration-300"
-                onClick={() => setIsOpen(false)}
-              >
-                Sign In
-              </Link>
-            )}
-          </motion.div> */}
+         
         </div>
       </motion.div>
     </header >

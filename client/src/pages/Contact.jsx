@@ -2,20 +2,18 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { FiMail, FiPhone, FiMapPin, FiSend } from 'react-icons/fi';
-import ParticleBG from '../components/ParticleBG';
 
 const Contact = () => {
   const form = useRef();
-  const themeColor = '#007ACC'; // Theme color
 
   const sendEmail = (e) => {
     e.preventDefault();
 
     emailjs.sendForm(
-      'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
-      'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+      'service_1eurffo', // Replace with your EmailJS service ID
+      'template_wbij6rl', // Replace with your EmailJS template ID
       form.current,
-      'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+      't5oxR8sG0RJvos3qR' // Replace with your EmailJS public key
     )
     .then((result) => {
       alert('Message sent successfully!');
@@ -51,29 +49,6 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
-      {/* Floating animated bubbles */}
-      {[...Array(12)].map((_, i) => (
-        <motion.div
-          key={i}
-          animate={{
-            y: [0, -20 + Math.random() * 40],
-            x: [0, -10 + Math.random() * 20],
-          }}
-          transition={{
-            duration: 15 + Math.random() * 10,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-          className="fixed rounded-full bg-[#007ACC]/10 pointer-events-none"
-          style={{
-            width: `${5 + Math.random() * 10}px`,
-            height: `${5 + Math.random() * 10}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            zIndex: -1,
-          }}
-        />
-      ))}
 
       <div className="max-w-6xl mx-auto">
         {/* Header */}

@@ -107,7 +107,7 @@ function PolicyInsertionForm() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-3xl font-bold mb-6 text-center text-blue-800"
+          className="text-3xl font-bold mb-6 text-center text-[#007ACC]"
         >
           Add New Policy
         </motion.h2>
@@ -478,7 +478,7 @@ function PolicyInsertionForm() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               disabled={isSubmitting}
-              className={`w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
+              className={`w-full bg-[#007ACC] text-white py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">

@@ -24,25 +24,6 @@ const Footer = () => {
   return (
     <footer className="relative bg-gray-900 text-white overflow-hidden pt-20 pb-12">
 
-
-      {/* Floating decorative elements */}
-      <motion.div
-        animate={{
-          rotate: [0, 360],
-          y: [0, 20, 0],
-        }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        className="absolute -top-32 left-1/4 w-64 h-64 opacity-5 hidden lg:block"
-        style={{
-          backgroundColor: "#007ACC",
-          borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-        }}
-      />
-
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           {/* Company info */}
@@ -64,10 +45,7 @@ const Footer = () => {
 
           {/* Quick links */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
+            
           >
             <h3 className="text-lg font-semibold mb-6 relative inline-block">
               <span>Quick Links</span>
@@ -113,9 +91,6 @@ const Footer = () => {
               ].map((item, i) => (
                 <motion.li
                   key={i}
-                  initial={{ x: -10, opacity: 0 }}
-                  whileInView={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
                   viewport={{ once: true }}
                   whileHover={{ x: 5 }}
                 >
