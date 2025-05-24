@@ -19,6 +19,7 @@ server.use(express.json());
 server.use(cookieParser());
 server.use(cors({
     origin: 'http://localhost:5173', // Your frontend URL
+    // origin: 'https://lims.netlify.app',
     credentials: true
 }));
 
@@ -78,8 +79,8 @@ Mehdi Raza`,
 // Cron schedule with proper timezone handling
 cron.schedule('0 0 * * *', async () => {
 
-    console.log('Scheduled to run at 12:00 AM, delaying by 1 minute...');
-    await new Promise(resolve => setTimeout(resolve, 60 * 1000));
+    // console.log('Scheduled to run at 12:00 AM, delaying by 1 minute...');
+    // await new Promise(resolve => setTimeout(resolve, 60 * 1000));
 
     console.log('Running anniversary check');
     const today = new Date();

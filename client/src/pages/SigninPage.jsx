@@ -265,7 +265,7 @@ const SigninPage = ({ isLoggedIn, setIsLoggedIn}) => {
             <div className="text-gray-600">
               Want new account?{" "}
               <Link
-                to="/signup"
+                to="/admin_signup_portal_LIMS"
                 className="font-medium"
                 style={{ color: customBlue }}
               >

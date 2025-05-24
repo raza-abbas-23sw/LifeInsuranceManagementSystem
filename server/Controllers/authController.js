@@ -36,7 +36,8 @@ export const signup = async (req, res) => {
         res.cookie('jwt', token, {
             expires: new Date(Date.now() + process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: "none"
         });
 
         res.status(201).json({
@@ -65,7 +66,8 @@ export const signin = async (req, res) => {
         res.cookie('jwt', token, {
             expires: new Date(Date.now() + process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: "none"
         });
 
         res.status(200).json({

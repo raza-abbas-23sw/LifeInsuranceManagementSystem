@@ -305,7 +305,7 @@ const SignupPage = ({ isLoggedIn, setIsLoggedIn }) => {
                         <div className="text-gray-600">
                             Already have an account?{" "}
                             <Link
-                                to="/signin"
+                                to="/admin_signin_portal_LIMS"
                                 className="font-medium"
                                 style={{ color: customBlue }}
                             >
