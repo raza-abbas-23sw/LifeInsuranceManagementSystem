@@ -47,9 +47,9 @@ import React, { useState } from 'react';
 
 
 const planTypes = [
-  { value: '03/10', label: 'Standard (10 Years)' },
-  { value: '03/15', label: 'Standard (15 Years)' },
-  { value: '03/20', label: 'Standard (20 Years)' },
+  { value: '03/10', label: 'Endowment (10 Years)' },
+  { value: '03/15', label: 'Endowment (15 Years)' },
+  { value: '03/20', label: 'Endowment (20 Years)' },
   { value: '81/20', label: 'Golden (20 Years)' },
   { value: 'PLA', label: 'Platinium (10 Years)' },
   { value: 'TAKAFUL_ENDOW_20', label: 'Takaful Endowment (10 Years)' },
@@ -164,7 +164,7 @@ export const calculateInsuranceData = (name, age, planType, sumAssured) => {
     { key: 'age', label: 'Age', value: `${age} years` },
     { key: 'plan', label: 'Plan Type', value: planTypes.find(p => p.value === planType).label },
     { key: 'sumAssured', label: 'Sum Assured', value: `${sumAssured}` },
-    { key: 'annualPremium', label: 'Annual Premium', value: `PKR ${Math.round(basePremium).toLocaleString('en-PK')}` },
+    { key: 'annualPremium', label: 'Annual Premium', value: `${Math.round(basePremium)}` },
     { key: 'totalMaturity', label: 'Total Maturity Value', value: `${bonuses.totalMaturity}` },
     ...bonuses.breakdown.map(bonus => ({
       key: `bonus-${bonus.type}-${bonus.period}`,

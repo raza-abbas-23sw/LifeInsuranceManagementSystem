@@ -8,7 +8,8 @@ const GeneratePlan = () => {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
-    plan: "03/20", // Default to Standard (20 Years)
+    gender:"male", 
+    plan: "03/20",
     sumAssured: "",
     customSumAssured: "",
   });
@@ -18,9 +19,9 @@ const GeneratePlan = () => {
 
   // Plan types with disabled plans
   const planTypes = [
-    { value: "03/10", label: "Standard (10 Years)" },
-    { value: "03/15", label: "Standard (15 Years)" },
-    { value: "03/20", label: "Standard (20 Years)" },
+    { value: "03/10", label: "Endowment (10 Years)" },
+    { value: "03/15", label: "Endowment (15 Years)" },
+    { value: "03/20", label: "Endowment (20 Years)" },
     { value: "81/20", label: "Golden (20 Years)" },
     { value: "PLA", label: "Platinum (10 Years)", disabled: true },
     {
@@ -96,7 +97,7 @@ const GeneratePlan = () => {
         formData.name,
         parseInt(formData.age, 10),
         formData.plan,
-        sumAssuredNumber
+        sumAssuredNumber,
       );
 
       setInsuranceResults(results);
@@ -132,9 +133,26 @@ const GeneratePlan = () => {
     },
   };
 
+  const format = (num) => {
+    // Convert to string if it's a number
+    const numStr = typeof num === "number" ? num.toString() : num;
+
+    // Remove any existing commas and non-digit characters (except decimal point)
+    const cleaned = numStr.replace(/[^\d.]/g, "");
+
+    // Split into integer and decimal parts
+    const parts = cleaned.split(".");
+    let integerPart = parts[0];
+    const decimalPart = parts.length > 1 ? `.${parts[1]}` : "";
+
+    // Add commas to the integer part
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    return integerPart + decimalPart;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b  py-8 px-4 sm:px-6 lg:px-8">
-       
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -212,6 +230,44 @@ const GeneratePlan = () => {
                         required
                         whileFocus={{ scale: 1.02 }}
                       />
+                    </div>
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <label
+                      htmlFor="gender"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Gender
+                    </label>
+                    <div className="mt-1 relative">
+                      <motion.select
+                        id="gender"
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#007ACC] focus:border-[#007ACC] transition duration-200 appearance-none bg-white"
+                        required
+                        whileFocus={{ scale: 1.02 }}
+                      >
+                        <option value="male" selected='true'>
+                          male
+                        </option>
+                        <option value="female">female</option>
+                      </motion.select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg
+                          className="h-4 w-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </motion.div>
 
@@ -460,9 +516,9 @@ const GeneratePlan = () => {
               >
                 This plan is prepared For
                 <br />
-                <strong>Mr. {insuranceResults[0].value}</strong>
+                <strong>{formData.gender==='male'?"Mr.":"Ms."} {insuranceResults[0].value} </strong>
                 <br />
-                Sum Assured {insuranceResults[3].value}
+                Sum Assured {format(insuranceResults[3].value)}
               </p>
             </div>
 
@@ -491,13 +547,13 @@ const GeneratePlan = () => {
                 <tr style={{ border: "1px solid #000", textAlign: "center" }}>
                   <td style={{ border: "1px solid #000" }}>Sum Assured</td>
                   <td style={{ border: "1px solid #000" }}>
-                    Rs. {insuranceResults[3].value}
+                    Rs. {format(insuranceResults[3].value)}
                   </td>
                 </tr>
                 <tr style={{ border: "1px solid #000", textAlign: "center" }}>
                   <td style={{ border: "1px solid #000" }}>Annual Premium</td>
                   <td style={{ border: "1px solid #000" }}>
-                    Rs. {insuranceResults[4].value}
+                    Rs. {format(insuranceResults[4].value)}
                   </td>
                 </tr>
               </tbody>
@@ -530,26 +586,27 @@ const GeneratePlan = () => {
               }}
             >
               <tbody>
-                <tr style={{ border: "1px solid #000" }}>
-                  <td style={{ border: "1px solid #000" }}>
+                <tr style={{ border: "1px solid #000", paddingLeft: "5px" }}>
+                  <td style={{ border: "1px solid #000", paddingLeft: "5px" }}>
                     For the first 5 years(per year)
                   </td>
-                  <td
-                    style={{ border: "1px solid #000", textAlign: "center" }}
-                  >
+                  <td style={{ border: "1px solid #000", textAlign: "center" }}>
                     {Math.round(insuranceResults[6].value / 5)} X 5
                   </td>
-                  <td
-                    style={{ border: "1px solid #000", textAlign: "center" }}
-                  >
-                    Rs {Math.round(insuranceResults[6].value)}
+                  <td style={{ border: "1px solid #000", textAlign: "center" }}>
+                    Rs {format(Math.round(insuranceResults[6].value))}
                   </td>
                 </tr>
-                {insuranceResults[2].value !== "Standard (10 Years)" &&
-                  insuranceResults[2].value !== "Standard (15 Years)" && (
+                {insuranceResults[2].value !== "Endowment (10 Years)" &&
+                  insuranceResults[2].value !== "Endowment (15 Years)" && (
                     <>
                       <tr style={{ border: "1px solid #000" }}>
-                        <td style={{ border: "1px solid #000" }}>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            paddingLeft: "5px",
+                          }}
+                        >
                           From 6th to 16th year (per year)
                         </td>
                         <td
@@ -566,11 +623,16 @@ const GeneratePlan = () => {
                             textAlign: "center",
                           }}
                         >
-                          Rs {Math.round(insuranceResults[7].value)}
+                          Rs {format(Math.round(insuranceResults[7].value))}
                         </td>
                       </tr>
                       <tr style={{ border: "1px solid #000" }}>
-                        <td style={{ border: "1px solid #000" }}>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            paddingLeft: "5px",
+                          }}
+                        >
                           From 17th to 20th year(per year)
                         </td>
                         <td
@@ -587,11 +649,16 @@ const GeneratePlan = () => {
                             textAlign: "center",
                           }}
                         >
-                          Rs {Math.round(insuranceResults[8].value)}
+                          Rs {format(Math.round(insuranceResults[8].value))}
                         </td>
                       </tr>
                       <tr style={{ border: "1px solid #000" }}>
-                        <td style={{ border: "1px solid #000" }}>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            paddingLeft: "5px",
+                          }}
+                        >
                           Terminal Bonus (At maturity)
                         </td>
                         <td
@@ -608,11 +675,16 @@ const GeneratePlan = () => {
                             textAlign: "center",
                           }}
                         >
-                          Rs {insuranceResults[9].value}
+                          Rs {format(insuranceResults[9].value)}
                         </td>
                       </tr>
                       <tr style={{ border: "1px solid #000" }}>
-                        <td style={{ border: "1px solid #000" }}>
+                        <td
+                          style={{
+                            border: "1px solid #000",
+                            paddingLeft: "5px",
+                          }}
+                        >
                           Loyalty Terminal Bonus(At maturity)
                         </td>
                         <td
@@ -629,15 +701,17 @@ const GeneratePlan = () => {
                             textAlign: "center",
                           }}
                         >
-                          Rs {insuranceResults[10].value}
+                          Rs {format(insuranceResults[10].value)}
                         </td>
                       </tr>
                     </>
                   )}
-                {insuranceResults[2].value === "Standard (10 Years)" && (
+                {insuranceResults[2].value === "Endowment (10 Years)" && (
                   <>
                     <tr style={{ border: "1px solid #000" }}>
-                      <td style={{ border: "1px solid #000" }}>
+                      <td
+                        style={{ border: "1px solid #000", paddingLeft: "5px" }}
+                      >
                         From 6th to 10th year (per year)
                       </td>
                       <td
@@ -654,11 +728,13 @@ const GeneratePlan = () => {
                           textAlign: "center",
                         }}
                       >
-                        Rs {insuranceResults[7].value}
+                        Rs {format(insuranceResults[7].value)}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid #000" }}>
-                      <td style={{ border: "1px solid #000" }}>
+                      <td
+                        style={{ border: "1px solid #000", paddingLeft: "5px" }}
+                      >
                         Loyalty Terminal Bonus(At maturity)
                       </td>
                       <td
@@ -675,16 +751,18 @@ const GeneratePlan = () => {
                           textAlign: "center",
                         }}
                       >
-                        Rs {insuranceResults[8].value}
+                        Rs {format(insuranceResults[8].value)}
                       </td>
                     </tr>
                   </>
                 )}
 
-                {insuranceResults[2].value === "Standard (15 Years)" && (
+                {insuranceResults[2].value === "Endowment (15 Years)" && (
                   <>
                     <tr style={{ border: "1px solid #000" }}>
-                      <td style={{ border: "1px solid #000" }}>
+                      <td
+                        style={{ border: "1px solid #000", paddingLeft: "5px" }}
+                      >
                         From 6th to 15th year (per year)
                       </td>
                       <td
@@ -701,11 +779,13 @@ const GeneratePlan = () => {
                           textAlign: "center",
                         }}
                       >
-                        Rs {Math.round(insuranceResults[7].value)}
+                        Rs {format(Math.round(insuranceResults[7].value))}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid #000" }}>
-                      <td style={{ border: "1px solid #000" }}>
+                      <td
+                        style={{ border: "1px solid #000", paddingLeft: "5px" }}
+                      >
                         Terminal Bonus (At maturity)
                       </td>
                       <td
@@ -722,11 +802,13 @@ const GeneratePlan = () => {
                           textAlign: "center",
                         }}
                       >
-                        Rs {insuranceResults[8].value}
+                        Rs {format(insuranceResults[8].value)}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid #000" }}>
-                      <td style={{ border: "1px solid #000" }}>
+                      <td
+                        style={{ border: "1px solid #000", paddingLeft: "5px" }}
+                      >
                         Loyalty Terminal Bonus(At maturity)
                       </td>
                       <td
@@ -743,19 +825,19 @@ const GeneratePlan = () => {
                           textAlign: "center",
                         }}
                       >
-                        Rs {insuranceResults[9].value}
+                        Rs {format(insuranceResults[9].value)}
                       </td>
                     </tr>
                   </>
                 )}
 
                 <tr style={{ border: "1px solid #000" }}>
-                  <td style={{ border: "1px solid #000" }}>Sum Assured</td>
+                  <td style={{ border: "1px solid #000", paddingLeft: "5px" }}>
+                    Sum Assured
+                  </td>
                   <td style={{ border: "1px solid #000" }}></td>
-                  <td
-                    style={{ border: "1px solid #000", textAlign: "center" }}
-                  >
-                    Rs {insuranceResults[3].value}
+                  <td style={{ border: "1px solid #000", textAlign: "center" }}>
+                    Rs {format(insuranceResults[3].value)}
                   </td>
                 </tr>
               </tbody>
@@ -776,7 +858,7 @@ const GeneratePlan = () => {
               }}
             >
               <h1> Current Maturity Total</h1>
-              <h1>Rs {insuranceResults[5].value}</h1>
+              <h1>Rs {format(insuranceResults[5].value)}</h1>
             </div>
 
             <p
@@ -786,8 +868,8 @@ const GeneratePlan = () => {
                 marginTop: "10px",
               }}
             >
-              The Current Bonus Rates have been used in the illustration,
-              Future Bonus depends on future Acturial Valuation
+              The Current Bonus Rates have been used in the illustration, Future
+              Bonus depends on future Acturial Valuation
             </p>
 
             <h1
@@ -802,7 +884,8 @@ const GeneratePlan = () => {
                 padding: "5px",
               }}
             >
-              Expected Maturity Return is Rs. {insuranceResults[3].value * 4}
+              Expected Maturity Return is Rs.{" "}
+              {format(insuranceResults[3].value * 4)}
             </h1>
 
             <h3
@@ -827,13 +910,14 @@ const GeneratePlan = () => {
                 borderTop: "0px",
               }}
             >
-              In Case of Accidental Death (God Forbid) From 1st day
+              In Case of Accidental Death (God Forbid), if ADB is added, From
+              1st day.
               <br />
-              Rs. {insuranceResults[3].value * 2} + Bonus(es)
+              Rs. {format(insuranceResults[3].value * 2)} + Bonus(es)
               <br />
               In Case of Death (God Forbid) From 1st day
               <br />
-              Rs. {insuranceResults[3].value} + Bonus(es)
+              Rs. {format(insuranceResults[3].value)} + Bonus(es)
             </p>
 
             <h3
@@ -878,7 +962,7 @@ const GeneratePlan = () => {
               }}
             >
               <p>
-                Mehdi Raza || Senior Sales Manager || Cells 03023646514
+                Roshan Ali Lakho || Senior Sales Manager || Cell 03023646514
               </p>
             </div>
           </div>

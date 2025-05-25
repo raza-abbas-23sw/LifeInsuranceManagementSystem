@@ -207,14 +207,14 @@ const Home = () => {
                       />
                     </div>
                     <p className="text-sm text-gray-500">
-                      Coverage: <span className="font-medium">$500,000</span>
+                      Coverage: <span className="font-medium">200,000,000</span>
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     {[
                       { label: "Term", value: "20 Years" },
-                      { label: "Premium", value: "$99/mo" },
+                      { label: "Premium", value: "Rs 25000/mo" },
                       { label: "Payout", value: "Guaranteed" },
                       { label: "Rating", value: "AAA" },
                     ].map((item, i) => (
@@ -236,6 +236,7 @@ const Home = () => {
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-3 rounded-lg font-bold text-white"
                     style={{ backgroundColor: "#007ACC" }}
+                    onClick={() => navigate("/generate-plan")}
                   >
                     Customize Plan
                   </motion.button>
